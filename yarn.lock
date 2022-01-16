@@ -5250,6 +5250,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"convert-hex@npm:~0.1.0":
+  version: 0.1.0
+  resolution: "convert-hex@npm:0.1.0"
+  checksum: eacb880dbc45a36a0e6b5f5674f7e57bdce59bbf5a3ebfba980f694e2be81f1b2c81c9c89834f8054f23cc9c21d1fd210265e2000287a1cd0426657797b2f462
+  languageName: node
+  linkType: hard
+
 "convert-source-map@npm:1.7.0":
   version: 1.7.0
   resolution: "convert-source-map@npm:1.7.0"
@@ -5272,6 +5279,13 @@ __metadata:
   dependencies:
     safe-buffer: ~5.1.1
   checksum: 985d974a2d33e1a2543ada51c93e1ba2f73eaed608dc39f229afc78f71dcc4c8b7d7c684aa647e3c6a3a204027444d69e53e169ce94e8d1fa8d7dee80c9c8fed
+  languageName: node
+  linkType: hard
+
+"convert-string@npm:~0.1.0":
+  version: 0.1.0
+  resolution: "convert-string@npm:0.1.0"
+  checksum: a1775cb186d2fbf175486f02e3f7cc68c75e7a0c7609bf434d2a933e801b3a0499ab57de4230919ec824351dc344055bf639a1db5e44a976787145817106d9aa
   languageName: node
   linkType: hard
 
@@ -14107,6 +14121,16 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"sha256@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "sha256@npm:0.2.0"
+  dependencies:
+    convert-hex: ~0.1.0
+    convert-string: ~0.1.0
+  checksum: bed2d6507279e34ad2c517d18fbe871900244aca425a298d6ba10115e9beb49a8028296aeff5441b6db4902503a47198138e23ba1be440761a84288c93101ca1
+  languageName: node
+  linkType: hard
+
 "shallowequal@npm:^1.1.0":
   version: 1.1.0
   resolution: "shallowequal@npm:1.1.0"
@@ -14881,6 +14905,7 @@ resolve@^2.0.0-next.3:
     semantic-ui-css: ^2.4.1
     semantic-ui-react: ^2.0.3
     semistandard: ^16.0.0
+    sha256: ^0.2.0
   languageName: unknown
   linkType: soft
 

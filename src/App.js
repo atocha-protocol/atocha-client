@@ -6,6 +6,7 @@ import { SubstrateContextProvider, useSubstrate } from './substrate-lib';
 import { DeveloperConsole } from './substrate-lib/components';
 
 import AccountSelector from './AccountSelector';
+import AtocahModule from './AtochaModule';
 import Balances from './Balances';
 import BlockNumber from './BlockNumber';
 import Events from './Events';
@@ -61,6 +62,9 @@ function Main () {
             <BlockNumber />
             <BlockNumber finalized />
           </Grid.Row>
+          <Grid.Row>
+            <AtocahModule accountPair={accountPair} />
+          </Grid.Row>
           <Grid.Row stretched>
             <Balances />
           </Grid.Row>
@@ -75,6 +79,7 @@ function Main () {
           <Grid.Row>
             <TemplateModule accountPair={accountPair} />
           </Grid.Row>
+
         </Grid>
       </Container>
       <DeveloperConsole />
