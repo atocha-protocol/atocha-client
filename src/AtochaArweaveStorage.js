@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import sha256 from 'sha256';
 import {Form, Input, Grid, Card, Statistic, TextArea, Label} from 'semantic-ui-react';
+import axios from 'axios';
 
 import { useSubstrate } from './substrate-lib';
 import { TxButton } from './substrate-lib/components';
+import MakeAnswerSha256WithSimple from "./units/MakeAnswerSha256";
 
 function Main (props) {
   const { api } = useSubstrate();
   const { accountPair } = props;
 
   // Puzzle information.
+  const [answerHash, setAnswerHash] = useState('');
   const [status, setStatus] = useState(null);
-  const [storageHash, setStorageHash] = useState('');
   const [storageLength, setStorageLength] = useState('');
+  const [storageHash, setStorageHash] = useState('');
+  const [storageJson, setStorageJson] = useState({});
+
   const [maxFee, setMaxFee] = useState(0);
+  const [puzzleAnswer, setPuzzleAnswer] = useState('');
+  const [puzzleFileContent, setPuzzleFileContent] = useState({});
+  const [puzzleHash, setPuzzleHash] = useState('');
   const [puzzleTitle, setPuzzleTitle] = useState('');
   const [puzzleTextContent, setPuzzleTextContent] = useState({});
-  const [puzzleFileContent, setPuzzleFileContent] = useState({});
-  const [puzzleAnswer, setPuzzleAnswer] = useState('');
 
 
 
@@ -37,12 +43,30 @@ function Main (props) {
 
     const jsonStr = JSON.stringify(storageJson);
     const jsonHash = sha256(jsonStr);
-    setStorageLength(jsonStr.length)
+    setStorageJson(storageJson);
+    setStorageLength(jsonStr.length);
     setStorageHash(jsonHash);
     console.log('JSON:', jsonStr, jsonStr.length);
     console.log('user Effect.', jsonHash);
-  }, [api.query.templateModule, puzzleTitle, puzzleTextContent, puzzleFileContent]);
+  }, [api.query.atochaFinace, puzzleTitle, puzzleTextContent, puzzleFileContent]);
 
+  function statusChange (newStatus) {
+    if (newStatus.isFinalized) {
+      console.log('Send data to arweave.');
+      axios.post('http://localhost:8000/ar', storageJson).then(response => {
+        console.log('Request data: ', response.data);
+        setPuzzleHash(response.data.puzzle_hash);
+        setAnswerHash(MakeAnswerSha256WithSimple(puzzleAnswer, response.data.puzzle_hash));
+      }, err => {
+        console.log('Request err:', err);
+      }).catch((err) => {
+        console.log('Catch err:', err);
+      });
+    }else{
+      setPuzzleHash('');
+      setAnswerHash('');
+    }
+  }
   function handleContent(content) {
     setPuzzleTextContent({
       type: 'text',
@@ -57,13 +81,13 @@ function Main (props) {
       setPuzzleFileContent({
         type: 'file',
         data: fileReader.result
-      })
+      });
     };
     fileReader.readAsDataURL(file);
   }
   return (
     <Grid.Column width={8}>
-      <h1>Atocha Module</h1>
+      <h1>Atocha - Step 1 Arwave storage usecase.</h1>
       <Form>
         <Form.Field>
           <Input
@@ -100,21 +124,24 @@ function Main (props) {
               label='Submit'
               type='SIGNED-TX'
               setStatus={setStatus}
+              refStatus={statusChange}
               attrs={{
                 palletRpc: 'atochaFinace',
                 callable: 'preStorage',
                 inputParams: [storageHash, storageLength, maxFee],
-                paramFields: [true,true,true]
+                paramFields: [true, true, true]
               }}
           />
         </Form.Field>
-        <div style={{ overflowWrap: 'break-word' }}>{status}</div>
-      </Form>
+          <div style={{ overflowWrap: 'break-word' }}>{status}</div>
+          <div style={{ overflowWrap: 'break-word' }}>Puzzle hash: {puzzleHash}</div>
+          <div style={{ overflowWrap: 'break-word' }}>Answer hash: {answerHash}</div>
+        </Form>
     </Grid.Column>
   );
 }
 
-export default function AtochaModule (props) {
+export default function AtochaArweaveStorage (props) {
   const { api } = useSubstrate();
   return api.query.templateModule && api.query.templateModule.something
     ? <Main {...props} />

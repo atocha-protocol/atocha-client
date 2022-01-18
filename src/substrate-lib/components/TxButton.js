@@ -10,6 +10,7 @@ function TxButton ({
   accountPair = null,
   label,
   setStatus,
+  refStatus,
   color = 'blue',
   style = null,
   type = 'QUERY',
@@ -60,10 +61,14 @@ function TxButton ({
     return fromAcct;
   };
 
-  const txResHandler = ({ status }) =>
-    status.isFinalized
-      ? setStatus(`😉 Finalized. Block hash: ${status.asFinalized.toString()}`)
-      : setStatus(`Current transaction status: ${status.type}`);
+  const txResHandler = ({ status }) => {
+    if (status.isFinalized) {
+      setStatus(`😉 Finalized. Block hash: ${status.asFinalized.toString()}`);
+      refStatus(status);
+    } else {
+      setStatus(`Current transaction status: ${status.type}`);
+    }
+  }
 
   const txErrHandler = err =>
     setStatus(`😞 Transaction Failed: ${err.toString()}`);
@@ -231,6 +236,7 @@ function TxButton ({
 TxButton.propTypes = {
   accountPair: PropTypes.object,
   setStatus: PropTypes.func.isRequired,
+  refStatus: PropTypes.func,
   type: PropTypes.oneOf([
     'QUERY', 'RPC', 'SIGNED-TX', 'UNSIGNED-TX', 'SUDO-TX', 'UNCHECKED-SUDO-TX',
     'CONSTANT']).isRequired,
