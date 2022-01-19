@@ -8,6 +8,7 @@ import { DeveloperConsole } from './substrate-lib/components';
 import AtochaArweaveStorage from "./AtochaArweaveStorage";
 import AtochaPuzzleAnswer from "./AtochaPuzzleAnswer";
 import AtochaPuzzleCreator from "./AtochaPuzzleCreator";
+import AtochaCommitChallenge from "./AtochaCommitChallenge";
 
 import AccountSelector from './AccountSelector';
 import Balances from './Balances';
@@ -74,6 +75,9 @@ function Main () {
           </Grid.Row>
           <Grid.Row stretched>
             <AtochaPuzzleAnswer accountPair={accountPair} />
+          </Grid.Row>
+          <Grid.Row stretched>
+            <AtochaCommitChallenge accountPair={accountPair} />
           </Grid.Row>
           <Grid.Row stretched>
             <Balances />
