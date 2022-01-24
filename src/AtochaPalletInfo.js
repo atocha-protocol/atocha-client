@@ -6,55 +6,64 @@ import { useSubstrate } from './substrate-lib';
 function Main (props) {
   const { api, socket } = useSubstrate();
   const [palletInfo, setPalletInfo] = useState({});
+  const [blockNumber, setBlockNumber] = useState(0);
+  const [currentAddress, setCurrentAddress] = useState('');
+  const [points, setPoints] = useState(-1);
+  const { accountPair } = props;
 
   useEffect(() => {
     const getInfo = async () => {
-      console.log('-----RUN 2 ')
+      if (accountPair) {
+        setCurrentAddress(accountPair.address);
+        api.query.atochaFinace.atoPointLedger(accountPair.address).then(chain_point =>{
+          setPoints(chain_point.toString());
+        });
+      }
+
       try {
         const [
-            challengePeriodLength,
-            minBonusOfPuzzle,
-            penaltyOfCP,
-            taxOfTI,
-            taxOfTVO,
-            taxOfTVS
+          challengePeriodLength,
+          minBonusOfPuzzle,
+          exchangeMaxRewardListSize,
+          exchangeEraLength
         ] = await Promise.all([
           api.consts.atochaModule.challengePeriodLength,
           api.consts.atochaModule.minBonusOfPuzzle,
-          api.consts.atochaModule.penaltyOfCP,
-          // api.consts.atochaModule.taxOfTI,
-          // api.consts.atochaModule.taxOfTVO,
-          // api.consts.atochaModule.taxOfTVS
+          api.consts.atochaFinace.exchangeMaxRewardListSize,
+          api.consts.atochaFinace.exchangeEraLength
         ]);
         setPalletInfo({
           challengePeriodLength: challengePeriodLength.toString(),
           minBonusOfPuzzle: minBonusOfPuzzle.toString(),
-          // penaltyOfCP: penaltyOfCP,
-          // taxOfTI: taxOfTI,
-          // taxOfTVO: taxOfTVO,
-          // taxOfTVS: taxOfTVS
+          exchangeMaxRewardListSize: exchangeMaxRewardListSize.toString(),
+          exchangeEraLength: exchangeEraLength.toString()
         });
-        console.log('------ Run 4', palletInfo);
+        console.log('exchangeMaxRewardListSize = ', minBonusOfPuzzle, exchangeMaxRewardListSize);
       } catch (e) {
         console.error(e);
       }
     };
     getInfo();
-  }, [api.consts.atochaModule]);
+
+    const unsubscribeAll = null;
+    api.derive.chain.bestNumber(number => {
+      setBlockNumber(number.toNumber());
+      console.log('number = ', number.toNumber());
+    });
+    return () => unsubscribeAll && unsubscribeAll();
+  }, [api.consts.atochaModule, api.derive.chain.bestNumber, accountPair]);
 
   return (
     <Grid.Column>
       <Card>
         <Card.Content>
           <Card.Header>Atocha Pallet</Card.Header>
-          {/*const atochaModule.challengePeriodLength*/}
           <Card.Description>Challenge period length: {palletInfo.challengePeriodLength}</Card.Description>
-          {/*atochaModule.minBonusOfPuzzle*/}
           <Card.Description>Min bouns: {palletInfo.minBonusOfPuzzle} </Card.Description>
-          {/*<Card.Description>Tax CP: {palletInfo.penaltyOfCP}</Card.Description>*/}
-          {/*<Card.Description>Tax TI: </Card.Description>*/}
-          {/*<Card.Description>Tax TVO: </Card.Description>*/}
-          {/*<Card.Description>Tax TVS: </Card.Description>*/}
+          <Card.Description>Point reward era: {(blockNumber / 600).toFixed(2)} </Card.Description>
+          <Card.Description>Reward list size: {palletInfo.exchangeMaxRewardListSize}</Card.Description>
+          <Card.Description>Address: {currentAddress}</Card.Description>
+          <Card.Description>Points: {points}</Card.Description>
         </Card.Content>
       </Card>
     </Grid.Column>
@@ -64,7 +73,8 @@ function Main (props) {
 export default function AtochaPalletInfo (props) {
   const { api } = useSubstrate();
   return api.consts &&
-    api.consts.atochaModule
+    api.consts.atochaModule &&
+    api.consts.atochaFinace
     ? <Main {...props} />
     : null;
 }

@@ -21,6 +21,7 @@ import TemplateModule from './TemplateModule';
 import Transfer from './Transfer';
 import Upgrade from './Upgrade';
 import AtochaPalletInfo from "./AtochaPalletInfo";
+import AtochaApplyTokenReward from "./AtochaApplyTokenReward";
 
 
 function Main () {
@@ -69,7 +70,7 @@ function Main () {
             <BlockNumber finalized />
           </Grid.Row>
           <Grid.Row stretched>
-            <AtochaPalletInfo />
+            <AtochaPalletInfo accountPair={accountPair} />
           </Grid.Row>
           <Grid.Row stretched>
             <AtochaArweaveStorage accountPair={accountPair} />
@@ -82,6 +83,9 @@ function Main () {
           </Grid.Row>
           <Grid.Row stretched>
             <AtochaCommitChallenge accountPair={accountPair} />
+          </Grid.Row>
+          <Grid.Row stretched>
+            <AtochaApplyTokenReward accountPair={accountPair} />
           </Grid.Row>
           <Grid.Row stretched>
             <Balances />
