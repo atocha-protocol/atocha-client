@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Grid, Card, Statistic, TextArea, Label } from 'semantic-ui-react';
+import {Form, Input, Grid, Card, Statistic, TextArea, Label, Table, Container} from 'semantic-ui-react';
 
 import { useSubstrate } from './substrate-lib';
 import { TxButton } from './substrate-lib/components';
@@ -11,7 +11,7 @@ function Main (props) {
   // Puzzle information.
   const [deposit, setDeposit] = useState(0);
   const [status, setStatus] = useState(null);
-  const [puzzleHash, setPuzzleHash] = useState('');
+
   useEffect(() => {
 
   }, [api.query.atochaModule]);
@@ -28,8 +28,23 @@ function Main (props) {
 
   return (
     <Grid.Column width={8}>
-      <h1>Atocha - Step 5 Apply reward.</h1>
+      <h1>Atocha - Step 5 Apply reward usecase.</h1>
+
       <Form>
+          <Form.Field>
+              <Container>
+                  <Grid.Row>
+                      <Table celled striped size='small'>
+                          <Table.Body>
+                              <Table.Row>
+                                  <Table.Cell>Ranking</Table.Cell>
+                                  <Table.Cell>Address</Table.Cell>
+                              </Table.Row>
+                          </Table.Body>
+                      </Table>
+                  </Grid.Row>
+              </Container>
+          </Form.Field>
         <Form.Field style={{ textAlign: 'center' }}>
           <TxButton
               accountPair={accountPair}

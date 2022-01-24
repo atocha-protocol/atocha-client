@@ -28,7 +28,7 @@ function Main (props) {
 
   return (
     <Grid.Column width={8}>
-      <h1>Atocha - Step 4 Commit challenge.</h1>
+      <h1>Atocha - Step 4 Commit challenge usecase.</h1>
       <Form>
         <Form.Field>
           <Input

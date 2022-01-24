@@ -25,18 +25,25 @@ function Main (props) {
           challengePeriodLength,
           minBonusOfPuzzle,
           exchangeMaxRewardListSize,
-          exchangeEraLength
+          exchangeEraLength,
+          currentExchangeRewardEra,
+          lastExchangeRewardEra,
         ] = await Promise.all([
           api.consts.atochaModule.challengePeriodLength,
           api.consts.atochaModule.minBonusOfPuzzle,
           api.consts.atochaFinace.exchangeMaxRewardListSize,
-          api.consts.atochaFinace.exchangeEraLength
+          api.consts.atochaFinace.exchangeEraLength,
+          api.query.atochaFinace.currentExchangeRewardEra(),
+          api.query.atochaFinace.lastExchangeRewardEra(),
         ]);
+        console.log("currentExchangeRewardEra = ", currentExchangeRewardEra.isSome);
         setPalletInfo({
           challengePeriodLength: challengePeriodLength.toString(),
           minBonusOfPuzzle: minBonusOfPuzzle.toString(),
           exchangeMaxRewardListSize: exchangeMaxRewardListSize.toString(),
-          exchangeEraLength: exchangeEraLength.toString()
+          exchangeEraLength: exchangeEraLength.toString(),
+          currentExchangeRewardEra: currentExchangeRewardEra.isSome ? currentExchangeRewardEra.value.toNumber() : 'Null',
+          lastExchangeRewardEra: lastExchangeRewardEra.isSome ? currentExchangeRewardEra.value.toNumber() : 'Null'
         });
         console.log('exchangeMaxRewardListSize = ', minBonusOfPuzzle, exchangeMaxRewardListSize);
       } catch (e) {
@@ -58,12 +65,24 @@ function Main (props) {
       <Card>
         <Card.Content>
           <Card.Header>Atocha Pallet</Card.Header>
-          <Card.Description>Challenge period length: {palletInfo.challengePeriodLength}</Card.Description>
-          <Card.Description>Min bouns: {palletInfo.minBonusOfPuzzle} </Card.Description>
-          <Card.Description>Point reward era: {(blockNumber / 600).toFixed(2)} </Card.Description>
-          <Card.Description>Reward list size: {palletInfo.exchangeMaxRewardListSize}</Card.Description>
           <Card.Description>Address: {currentAddress}</Card.Description>
           <Card.Description>Points: {points}</Card.Description>
+        </Card.Content>
+        <Card.Content>
+          <Card.Description><Icon name='setting' />Puzzle settings:</Card.Description>
+          <Card.Description>Min bouns: {palletInfo.minBonusOfPuzzle} </Card.Description>
+        </Card.Content>
+        <Card.Content>
+          <Card.Description><Icon name='setting' />Challenge settings:</Card.Description>
+          <Card.Description>Challenge period length: {palletInfo.challengePeriodLength} (0line 5 Days)</Card.Description>
+        </Card.Content>
+        <Card.Content>
+          <Card.Description><Icon name='setting' />Exchange settings:</Card.Description>
+          <Card.Description>Exchange era length: {palletInfo.exchangeEraLength} (Online 1 Days)</Card.Description>
+          <Card.Description>Exchange era calculation: [{(blockNumber / palletInfo.exchangeEraLength).toFixed(2)}] </Card.Description>
+          <Card.Description>Exchange reward era: [{palletInfo.currentExchangeRewardEra}]</Card.Description>
+          <Card.Description>Last exchange era: [{palletInfo.lastExchangeRewardEra}]</Card.Description>
+          <Card.Description>Reward list size: {palletInfo.exchangeMaxRewardListSize}</Card.Description>
         </Card.Content>
       </Card>
     </Grid.Column>
