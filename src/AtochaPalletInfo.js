@@ -9,6 +9,7 @@ function Main (props) {
   const [blockNumber, setBlockNumber] = useState(0);
   const [currentAddress, setCurrentAddress] = useState('');
   const [points, setPoints] = useState(-1);
+  const [currentExchangeRewardEra, setCurrentExchangeRewardEra] = useState(0);
   const { accountPair } = props;
 
   useEffect(() => {
@@ -26,14 +27,14 @@ function Main (props) {
           minBonusOfPuzzle,
           exchangeMaxRewardListSize,
           exchangeEraLength,
-          currentExchangeRewardEra,
+          // currentExchangeRewardEra,
           lastExchangeRewardEra,
         ] = await Promise.all([
           api.consts.atochaModule.challengePeriodLength,
           api.consts.atochaModule.minBonusOfPuzzle,
           api.consts.atochaFinace.exchangeMaxRewardListSize,
           api.consts.atochaFinace.exchangeEraLength,
-          api.query.atochaFinace.currentExchangeRewardEra(),
+          // api.query.atochaFinace.currentExchangeRewardEra(),
           api.query.atochaFinace.lastExchangeRewardEra(),
         ]);
         console.log("currentExchangeRewardEra = ", currentExchangeRewardEra.isSome);
@@ -42,7 +43,7 @@ function Main (props) {
           minBonusOfPuzzle: minBonusOfPuzzle.toString(),
           exchangeMaxRewardListSize: exchangeMaxRewardListSize.toString(),
           exchangeEraLength: exchangeEraLength.toString(),
-          currentExchangeRewardEra: currentExchangeRewardEra.isSome ? currentExchangeRewardEra.value.toNumber() : 'Null',
+          // currentExchangeRewardEra: currentExchangeRewardEra.isSome ? currentExchangeRewardEra.value.toNumber() : 'Null',
           lastExchangeRewardEra: lastExchangeRewardEra.isSome ? currentExchangeRewardEra.value.toNumber() : 'Null'
         });
         console.log('exchangeMaxRewardListSize = ', minBonusOfPuzzle, exchangeMaxRewardListSize);
@@ -55,10 +56,23 @@ function Main (props) {
     const unsubscribeAll = null;
     api.derive.chain.bestNumber(number => {
       setBlockNumber(number.toNumber());
-      console.log('number = ', number.toNumber());
     });
+
+    api.query.atochaFinace.currentExchangeRewardEra((era_opt) => {
+      console.log(`Chain currentExchangeRewardEra: #${era_opt}`);
+      if (era_opt.isSome) {
+        setCurrentExchangeRewardEra(era_opt.value.toNumber());
+      }
+    });
+
     return () => unsubscribeAll && unsubscribeAll();
-  }, [api.consts.atochaModule, api.derive.chain.bestNumber, accountPair]);
+  }, [
+      api.consts.atochaModule,
+    api.derive.chain.bestNumber,
+    api.query.atochaFinace.currentExchangeRewardEra,
+    api.query.atochaFinace.atoPointLedger,
+    api.query.atochaFinace.lastExchangeRewardEra,
+    accountPair]);
 
   return (
     <Grid.Column>
@@ -74,14 +88,14 @@ function Main (props) {
         </Card.Content>
         <Card.Content>
           <Card.Description><Icon name='setting' />Challenge settings:</Card.Description>
-          <Card.Description>Challenge period length: {palletInfo.challengePeriodLength} (0line 5 Days)</Card.Description>
+          <Card.Description>Challenge period length: {palletInfo.challengePeriodLength}b (0line 5 Days)</Card.Description>
         </Card.Content>
         <Card.Content>
           <Card.Description><Icon name='setting' />Exchange settings:</Card.Description>
-          <Card.Description>Exchange era length: {palletInfo.exchangeEraLength} (Online 1 Days)</Card.Description>
+          <Card.Description>Exchange era length: {palletInfo.exchangeEraLength}b (Online 1 Days)</Card.Description>
           <Card.Description>Exchange era calculation: [{(blockNumber / palletInfo.exchangeEraLength).toFixed(2)}] </Card.Description>
-          <Card.Description>Exchange reward era: [{palletInfo.currentExchangeRewardEra}]</Card.Description>
-          <Card.Description>Last exchange era: [{palletInfo.lastExchangeRewardEra}]</Card.Description>
+          <Card.Description>Available exchange era: [{currentExchangeRewardEra}]</Card.Description>
+          <Card.Description>Last completed exchange era: [{palletInfo.lastExchangeRewardEra}]</Card.Description>
           <Card.Description>Reward list size: {palletInfo.exchangeMaxRewardListSize}</Card.Description>
         </Card.Content>
       </Card>
