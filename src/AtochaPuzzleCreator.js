@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import sha256 from 'sha256';
-import {Form, Input, Grid, Card, Statistic, TextArea, Label} from 'semantic-ui-react';
+import {Form, Input, Grid, Card, Statistic, TextArea, Label, Button} from 'semantic-ui-react';
 
 import { useSubstrate } from './substrate-lib';
 import { TxButton } from './substrate-lib/components';
@@ -18,41 +18,41 @@ function Main (props) {
   const [puzzleHash, setPuzzleHash] = useState('');
   const [puzzleInfo, setPuzzleInfo] = useState(null);
 
+  function refreshPuzzleInfo(){
+    api.query.atochaModule.puzzleInfo(puzzleHash).then(puzzleInfoOpt => {
+      if (puzzleInfoOpt.isSome) {
+        setPuzzleInfo(puzzleInfoOpt.value.toHuman());
+      }
+    });
+  }
+
   useEffect(async () => {
     // Get puzzle infos.
     if (puzzleHash !== '') {
-      api.query.atochaModule.puzzleInfo(puzzleHash).then(puzzleInfoOpt => {
-        if (puzzleInfoOpt.isSome) {
-          setPuzzleInfo(puzzleInfoOpt.value.toHuman());
-        }
-      });
+      refreshPuzzleInfo();
     }
-
-
-    let periodLength = await api.consts.atochaModule.challengePeriodLength;
-
-    console.log("period_length = ", periodLength.toString());
+    const periodLength = await api.consts.atochaModule.challengePeriodLength;
+    console.log('period_length = ', periodLength.toString());
     setChallengePeriodLength(periodLength.toString());
-    // (period_length => {
-    //   console.log("period_length = ", period_length);
-    //   // setChallengePeriodLength(period_length);
-    // });
-
     api.derive.chain.bestNumber(number => {
       setBlockNumber(number.toNumber());
     });
+  }, [api.query.atochaModule, api.query.atochaModule.puzzleInfo, puzzleHash, status]);
 
-  }, [api.query.atochaModule, puzzleHash]);
-
-  function countDeposit(num) {
+  function countDeposit (num) {
     const decimals = api.registry.chainDecimals;
     setDeposit(BigInt(num * (10 ** decimals)));
   }
 
   function statusChange (newStatus) {
     if (newStatus.isFinalized) {
-    }else{
+    } else {
     }
+  }
+
+  function convertBnToInt (blockNumber) {
+    if (null == blockNumber || undefined == blockNumber ) return 0;
+    return parseInt(blockNumber.replace(',', ''));
   }
 
   return (
@@ -95,18 +95,19 @@ function Main (props) {
                 paramFields: [true, true, true, true]
               }}
           />
+          <Button onClick={refreshPuzzleInfo()}>Refresh</Button>
         </Form.Field>
         <Form.Field>
           <div style={{ overflowWrap: 'break-word' }}>{status}</div>
         </Form.Field>
         <Form.Field>
           <div>Infos:</div>
-          <div>Create block number = {puzzleInfo?puzzleInfo.createBn:'Null'}</div>
-          <div>Puzzle status = {puzzleInfo?puzzleInfo.puzzleStatus:'Null'}</div>
-          <div>Puzzle version = {puzzleInfo?puzzleInfo.puzzleVersion:'Null'}</div>
-          <div>Reveal answer = {puzzleInfo?puzzleInfo.revealAnswer:'Null'}</div>
-          <div>Reveal block number = {puzzleInfo?puzzleInfo.revealBn:'Null'}</div>
-          <div>Reward take line = {puzzleInfo? parseInt(puzzleInfo.revealBn) + parseInt(challengePeriodLength) - blockNumber:'Null'}</div>
+          <div>Create block number = {puzzleInfo ? puzzleInfo.createBn : 'Null'}</div>
+          <div>Puzzle status = {puzzleInfo ? puzzleInfo.puzzleStatus : 'Null'}</div>
+          <div>Puzzle version = {puzzleInfo ? puzzleInfo.puzzleVersion : 'Null'}</div>
+          <div>Reveal answer = {puzzleInfo ? puzzleInfo.revealAnswer : 'Null'}</div>
+          <div>Reveal block number = {puzzleInfo ? puzzleInfo.revealBn : 'Null'}</div>
+          <div>Reward take line = {puzzleInfo && convertBnToInt(puzzleInfo.revealBn) > 0 ? convertBnToInt(puzzleInfo.revealBn) + parseInt(challengePeriodLength) - blockNumber : 'Null'}</div>
         </Form.Field>
       </Form>
 

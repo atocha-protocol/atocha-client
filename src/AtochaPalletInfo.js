@@ -29,6 +29,7 @@ function Main (props) {
           exchangeEraLength,
           // currentExchangeRewardEra,
           lastExchangeRewardEra,
+          perEraOfBlockNumber,
         ] = await Promise.all([
           api.consts.atochaModule.challengePeriodLength,
           api.consts.atochaModule.minBonusOfPuzzle,
@@ -36,15 +37,16 @@ function Main (props) {
           api.consts.atochaFinace.exchangeEraLength,
           // api.query.atochaFinace.currentExchangeRewardEra(),
           api.query.atochaFinace.lastExchangeRewardEra(),
+          api.consts.atochaFinace.perEraOfBlockNumber
         ]);
-        console.log("currentExchangeRewardEra = ", currentExchangeRewardEra.isSome);
         setPalletInfo({
           challengePeriodLength: challengePeriodLength.toString(),
           minBonusOfPuzzle: minBonusOfPuzzle.toString(),
           exchangeMaxRewardListSize: exchangeMaxRewardListSize.toString(),
           exchangeEraLength: exchangeEraLength.toString(),
           // currentExchangeRewardEra: currentExchangeRewardEra.isSome ? currentExchangeRewardEra.value.toNumber() : 'Null',
-          lastExchangeRewardEra: lastExchangeRewardEra.isSome ? currentExchangeRewardEra.value.toNumber() : 'Null'
+          lastExchangeRewardEra: lastExchangeRewardEra.isSome ? lastExchangeRewardEra.value.toNumber() : 'Null',
+          perEraOfBlockNumber: perEraOfBlockNumber.toNumber()
         });
         console.log('exchangeMaxRewardListSize = ', minBonusOfPuzzle, exchangeMaxRewardListSize);
       } catch (e) {
@@ -85,6 +87,10 @@ function Main (props) {
         <Card.Content>
           <Card.Description><Icon name='setting' />Puzzle settings:</Card.Description>
           <Card.Description>Min bouns: {palletInfo.minBonusOfPuzzle} </Card.Description>
+        </Card.Content>
+        <Card.Content>
+          <Card.Description><Icon name='setting' />Point reward settings:</Card.Description>
+          <Card.Description>Point reward era length: {palletInfo.perEraOfBlockNumber}b </Card.Description>
         </Card.Content>
         <Card.Content>
           <Card.Description><Icon name='setting' />Challenge settings:</Card.Description>
