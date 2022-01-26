@@ -98,7 +98,7 @@ function Main (props) {
         </Card.Content>
         <Card.Content>
           <Card.Description><Icon name='setting' />Exchange settings:</Card.Description>
-          <Card.Description>Exchange era length: {palletInfo.exchangeEraLength}b (Online 1 Days)</Card.Description>
+          <Card.Description>Exchange era length: {palletInfo.exchangeEraLength}b (Online 1 Weeks)</Card.Description>
           <Card.Description>Exchange era calculation: [{(blockNumber / palletInfo.exchangeEraLength).toFixed(2)}] </Card.Description>
           <Card.Description>Available exchange era: [{currentExchangeRewardEra}]</Card.Description>
           <Card.Description>Last completed exchange era: [{palletInfo.lastExchangeRewardEra}]</Card.Description>

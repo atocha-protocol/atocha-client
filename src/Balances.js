@@ -7,6 +7,7 @@ export default function Main (props) {
   const { api, keyring } = useSubstrate();
   const accounts = keyring.getPairs();
   const [balances, setBalances] = useState({});
+  const [points, setPoints] = useState({});
 
   useEffect(() => {
     const addresses = keyring.getPairs().map(account => account.address);
@@ -22,6 +23,22 @@ export default function Main (props) {
         unsubscribeAll = unsub;
       }).catch(console.error);
 
+    api.query.system.account.multi(addresses, balances => {
+      console.log('addresses = ', addresses, balances);
+    }).then(unsub => {
+
+    });
+
+    // api.query.atochaFinace.atoPointLedger
+    //   .multi(addresses, balances => {
+    //     const balancesMap = addresses.reduce((acc, address, index) => ({
+    //       ...acc, [address]: balances[index].data.free.toHuman()
+    //     }), {});
+    //     setBalances(balancesMap);
+    //   }).then(unsub => {
+    //     unsubscribeAll = unsub;
+    //   }).catch(console.error);
+
     return () => unsubscribeAll && unsubscribeAll();
   }, [api, keyring, setBalances]);
 
@@ -34,11 +51,14 @@ export default function Main (props) {
             <Table.Cell width={3} textAlign='right'>
               <strong>Name</strong>
             </Table.Cell>
-            <Table.Cell width={10}>
+            <Table.Cell width={7}>
               <strong>Address</strong>
             </Table.Cell>
             <Table.Cell width={3}>
               <strong>Balance</strong>
+            </Table.Cell>
+            <Table.Cell width={3}>
+              <strong>Point</strong>
             </Table.Cell>
           </Table.Row>
           {accounts.map(account =>
@@ -59,6 +79,10 @@ export default function Main (props) {
                   />
                 </CopyToClipboard>
               </Table.Cell>
+              <Table.Cell width={3}>{
+                balances && balances[account.address] &&
+                balances[account.address]
+              }</Table.Cell>
               <Table.Cell width={3}>{
                 balances && balances[account.address] &&
                 balances[account.address]

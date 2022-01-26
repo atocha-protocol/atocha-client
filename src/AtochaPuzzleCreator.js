@@ -17,16 +17,32 @@ function Main (props) {
   const [status, setStatus] = useState(null);
   const [puzzleHash, setPuzzleHash] = useState('');
   const [puzzleInfo, setPuzzleInfo] = useState(null);
+  const [challengeInfo, setChallengeInfo] = useState(null);
 
-  function refreshPuzzleInfo(){
+  async function refreshPuzzleInfo() {
+    console.log('refreshPuzzleInfo puzzleHash = ', puzzleHash);
     api.query.atochaModule.puzzleInfo(puzzleHash).then(puzzleInfoOpt => {
       if (puzzleInfoOpt.isSome) {
         setPuzzleInfo(puzzleInfoOpt.value.toHuman());
       }
     });
+
+    api.query.atochaFinace.puzzleChallengeInfo(puzzleHash).then(challengeInfoOpt => {
+      if (challengeInfoOpt.isSome) {
+        console.log('challengeInfoOpt.value.toHuman() 2 = ', challengeInfoOpt.value.toHuman());
+        setChallengeInfo(challengeInfoOpt.value.toHuman());
+      }
+    });
+
+    const allPuzzleInfoList = await api.query.atochaModule.puzzleInfo.entries();
+    console.log('RUN DEBUG 1 ', allPuzzleInfoList);
+    allPuzzleInfoList.forEach(([{args: [key]}, value]) => {
+      console.log(`puzzle info list = ${key.toHuman()}, ${value.toHuman()}`);
+    });
   }
 
   useEffect(async () => {
+    console.log("Run use effect ... ");
     // Get puzzle infos.
     if (puzzleHash !== '') {
       refreshPuzzleInfo();
@@ -95,19 +111,25 @@ function Main (props) {
                 paramFields: [true, true, true, true]
               }}
           />
-          <Button onClick={refreshPuzzleInfo()}>Refresh</Button>
         </Form.Field>
         <Form.Field>
           <div style={{ overflowWrap: 'break-word' }}>{status}</div>
         </Form.Field>
         <Form.Field>
-          <div>Infos:</div>
+          <div>Puzzle Infos:</div>
           <div>Create block number = {puzzleInfo ? puzzleInfo.createBn : 'Null'}</div>
           <div>Puzzle status = {puzzleInfo ? puzzleInfo.puzzleStatus : 'Null'}</div>
           <div>Puzzle version = {puzzleInfo ? puzzleInfo.puzzleVersion : 'Null'}</div>
           <div>Reveal answer = {puzzleInfo ? puzzleInfo.revealAnswer : 'Null'}</div>
           <div>Reveal block number = {puzzleInfo ? puzzleInfo.revealBn : 'Null'}</div>
           <div>Reward take line = {puzzleInfo && convertBnToInt(puzzleInfo.revealBn) > 0 ? convertBnToInt(puzzleInfo.revealBn) + parseInt(challengePeriodLength) - blockNumber : 'Null'}</div>
+        </Form.Field>
+        <Form.Field>
+          <div>Challenge Infos:</div>
+          <div>Raised total: {challengeInfo ? challengeInfo.raisedTotal : 'Null'}</div>
+          <div>Challenge start bn: {challengeInfo ? challengeInfo.startBn : 'Null'}</div>
+          <div>Challenge end be: {challengeInfo ? challengeInfo.endBn : 'Null'}</div>
+          <div>Challenge status: {challengeInfo ? JSON.stringify(challengeInfo.status) : 'Null'}</div>
         </Form.Field>
       </Form>
 
