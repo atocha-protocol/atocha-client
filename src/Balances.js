@@ -57,9 +57,6 @@ export default function Main (props) {
             <Table.Cell width={3}>
               <strong>Balance</strong>
             </Table.Cell>
-            <Table.Cell width={3}>
-              <strong>Point</strong>
-            </Table.Cell>
           </Table.Row>
           {accounts.map(account =>
             <Table.Row key={account.address}>
@@ -79,10 +76,6 @@ export default function Main (props) {
                   />
                 </CopyToClipboard>
               </Table.Cell>
-              <Table.Cell width={3}>{
-                balances && balances[account.address] &&
-                balances[account.address]
-              }</Table.Cell>
               <Table.Cell width={3}>{
                 balances && balances[account.address] &&
                 balances[account.address]

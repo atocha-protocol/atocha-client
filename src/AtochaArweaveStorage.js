@@ -3,6 +3,9 @@ import sha256 from 'sha256';
 import {Form, Input, Grid, Card, Statistic, TextArea, Label} from 'semantic-ui-react';
 import axios from 'axios';
 
+import config from './config';
+
+
 import { useSubstrate } from './substrate-lib';
 import { TxButton } from './substrate-lib/components';
 import MakeAnswerSha256WithSimple from "./units/MakeAnswerSha256";
@@ -53,7 +56,7 @@ function Main (props) {
   function statusChange (newStatus) {
     if (newStatus.isFinalized) {
       console.log('Send data to arweave.');
-      axios.post('http://localhost:8000/ar', storageJson).then(response => {
+      axios.post(config.ARWEAVE_HTTP, storageJson).then(response => {
         console.log('Request data: ', response.data);
         setPuzzleHash(response.data.puzzle_hash);
         setAnswerHash(MakeAnswerSha256WithSimple(puzzleAnswer, response.data.puzzle_hash));
