@@ -90,6 +90,9 @@ function Main () {
           <Grid.Row stretched>
             <Balances />
           </Grid.Row>
+          <Grid.Row>
+            <Transfer accountPair={accountPair} />
+          </Grid.Row>
         </Grid>
       </Container>
       <DeveloperConsole />

@@ -21,6 +21,12 @@ export default function Main (props) {
     return availableAccounts.push({ key: account.meta.name, text: account.meta.name, value: account.address });
   });
 
+  function statusChange (newStatus) {
+    if (newStatus.isFinalized) {
+    }else{
+    }
+  }
+
   return (
     <Grid.Column width={8}>
       <h1>Transfer</h1>
@@ -74,6 +80,7 @@ export default function Main (props) {
             label='Submit'
             type='SIGNED-TX'
             setStatus={setStatus}
+            refStatus={statusChange}
             attrs={{
               palletRpc: 'balances',
               callable: 'transfer',
