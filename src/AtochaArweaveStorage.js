@@ -42,7 +42,7 @@ function Main (props) {
       ]
     };
     const decimals = api.registry.chainDecimals;
-    setMaxFee(BigInt(5000000 * (10 ** decimals)));
+    setMaxFee(BigInt(5000 * (18 ** decimals)));
 
     const jsonStr = JSON.stringify(storageJson);
     const jsonHash = sha256(jsonStr);
