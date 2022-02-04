@@ -18,6 +18,27 @@ function Main (props) {
   const [puzzleHash, setPuzzleHash] = useState('');
   const [puzzleInfo, setPuzzleInfo] = useState(null);
   const [challengeInfo, setChallengeInfo] = useState(null);
+  const [atochaModuleConfig, setAtochaModuleConfig] = useState(null);
+
+  async function updateAtochaModuleConfig() {
+    api.query.atochaModule.atoConfig().then(puzzleInfoOpt => {
+      // challengePeriodLength: "20"
+      // maxAnswerExplainLen: "1,024"
+      // maxSponsorExplainLen: "256"
+      // minBonusOfPuzzle: "100,000,000,000,000,000,000"
+      // penaltyOfCp: "10.00%"
+      // taxOfTcr: "10.00%"
+      // taxOfTi: "10.00%"
+      // taxOfTvo: "10.00%"
+      // taxOfTvs: "5.00%"
+      if (puzzleInfoOpt.isSome) {
+        // console.log(puzzleInfoOpt.value.toHuman());
+        const config_val = puzzleInfoOpt.value.toHuman();
+        setAtochaModuleConfig(config_val);
+        setChallengePeriodLength(config_val.challengePeriodLength);
+      }
+    });
+  }
 
   async function refreshPuzzleInfo() {
     console.log('refreshPuzzleInfo puzzleHash = ', puzzleHash);
@@ -47,9 +68,9 @@ function Main (props) {
     if (puzzleHash !== '') {
       refreshPuzzleInfo();
     }
-    const periodLength = await api.consts.atochaModule.challengePeriodLength;
-    console.log('period_length = ', periodLength.toString());
-    setChallengePeriodLength(periodLength.toString());
+
+    updateAtochaModuleConfig();
+
     api.derive.chain.bestNumber(number => {
       setBlockNumber(number.toNumber());
     });
