@@ -65,7 +65,7 @@ function Main (props) {
 
       try {
         const [
-          challengePeriodLength,
+          // challengePeriodLength,
           // minBonusOfPuzzle,
           exchangeMaxRewardListSize,
           // exchangeEraLength,
@@ -75,7 +75,7 @@ function Main (props) {
         ] = await Promise.all([
           // api.consts.atochaModule.challengePeriodLength,
           // api.consts.atochaModule.minBonusOfPuzzle,
-          api.consts.atochaFinace.exchangeMaxRewardListSize,
+          // api.consts.atochaFinace.exchangeMaxRewardListSize,
           // api.consts.atochaFinace.exchangeEraLength,
           // api.query.atochaFinace.currentExchangeRewardEra(),
           api.query.atochaFinace.lastExchangeRewardEra(),
@@ -84,7 +84,7 @@ function Main (props) {
         setPalletInfo({
           // challengePeriodLength: challengePeriodLength.toString(),
           // minBonusOfPuzzle: minBonusOfPuzzle.toString(),
-          exchangeMaxRewardListSize: exchangeMaxRewardListSize.toString(),
+          // exchangeMaxRewardListSize: exchangeMaxRewardListSize.toString(),
           // exchangeEraLength: exchangeEraLength.toString(),
           // currentExchangeRewardEra: currentExchangeRewardEra.isSome ? currentExchangeRewardEra.value.toNumber() : 'Null',
           lastExchangeRewardEra: lastExchangeRewardEra.isSome ? lastExchangeRewardEra.value.toNumber() : 'Null',
@@ -136,6 +136,8 @@ function Main (props) {
         <Card.Content>
           <Card.Description><Icon name='setting' />Challenge settings:</Card.Description>
           <Card.Description>Challenge period length: {atochaModuleConfig ?atochaModuleConfig.challengePeriodLength:'*'}b (0line 5 Days)</Card.Description>
+          <Card.Description>Raising period length: {atochaFinaceConfig ?atochaFinaceConfig.raisingPeriodLength:'*'}b (0line 3 Days)</Card.Description>
+
         </Card.Content>
         <Card.Content>
           <Card.Description><Icon name='setting' />Exchange settings:</Card.Description>

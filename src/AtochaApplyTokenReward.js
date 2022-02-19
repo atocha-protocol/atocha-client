@@ -92,7 +92,7 @@ function Main (props) {
 
 export default function AtochaApplyTokenReward (props) {
   const { api } = useSubstrate();
-  return api.query.templateModule && api.query.templateModule.something
+  return api.query
     ? <Main {...props} />
     : null;
 }
