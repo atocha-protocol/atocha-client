@@ -31,6 +31,7 @@ function Main (props) {
 
   // Set the initial address
   useEffect(() => {
+    console.log(`initialAddress  = ${initialAddress}, `, keyringOptions);
     setAccountAddress(initialAddress);
     setAccountSelected(initialAddress);
   }, [setAccountAddress, initialAddress]);

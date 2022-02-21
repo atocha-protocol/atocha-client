@@ -1,27 +1,15 @@
 import React, { useState, createRef } from 'react';
 import { Container, Dimmer, Loader, Grid, Sticky, Message } from 'semantic-ui-react';
+import { Routes, Route, Link, BrowserRouter} from "react-router-dom";
 import 'semantic-ui-css/semantic.min.css';
 
 import { SubstrateContextProvider, useSubstrate } from './substrate-lib';
 import { DeveloperConsole } from './substrate-lib/components';
 
-import AtochaArweaveStorage from "./AtochaArweaveStorage";
-import AtochaPuzzleAnswer from "./AtochaPuzzleAnswer";
-import AtochaPuzzleCreator from "./AtochaPuzzleCreator";
-import AtochaCommitChallenge from "./AtochaCommitChallenge";
 
 import AccountSelector from './AccountSelector';
-import Balances from './Balances';
-import BlockNumber from './BlockNumber';
-import Events from './Events';
-import Interactor from './Interactor';
-import Metadata from './Metadata';
-import NodeInfo from './NodeInfo';
-import TemplateModule from './TemplateModule';
-import Transfer from './Transfer';
-import Upgrade from './Upgrade';
-import AtochaPalletInfo from "./AtochaPalletInfo";
-import AtochaApplyTokenReward from "./AtochaApplyTokenReward";
+import PuzzleList from "./PuzzleList";
+import StepCase from "./StepCase";
 
 
 function Main () {
@@ -63,35 +51,18 @@ function Main () {
       </Sticky>
       <Container>
         <Grid stackable columns='equal'>
-          <Grid.Row stretched>
-            <NodeInfo />
-            <Metadata />
-            <BlockNumber />
-            <BlockNumber finalized />
-          </Grid.Row>
-          <Grid.Row stretched>
-            <AtochaPalletInfo accountPair={accountPair} />
-          </Grid.Row>
-          <Grid.Row stretched>
-            <AtochaArweaveStorage accountPair={accountPair} />
-          </Grid.Row>
-          <Grid.Row stretched>
-            <AtochaPuzzleCreator accountPair={accountPair} />
-          </Grid.Row>
-          <Grid.Row stretched>
-            <AtochaPuzzleAnswer accountPair={accountPair} />
-          </Grid.Row>
-          <Grid.Row stretched>
-            <AtochaCommitChallenge accountPair={accountPair} />
-          </Grid.Row>
-          <Grid.Row stretched>
-            <AtochaApplyTokenReward accountPair={accountPair} />
-          </Grid.Row>
-          <Grid.Row stretched>
-            <Balances />
-          </Grid.Row>
           <Grid.Row>
-            <Transfer accountPair={accountPair} />
+            <BrowserRouter>
+              <div className="App">
+                <h3><Link to="/">Home</Link></h3>
+                <h3><Link to="/puzzle_list">Atocha Puzzle Client</Link></h3>
+                <h3><Link to="/step_case">StepCase</Link></h3>
+                <Routes>
+                  <Route path="/puzzle_list" element={<PuzzleList accountPair={accountPair}/>} />
+                  <Route path="/step_case" element={<StepCase accountPair={accountPair}/>} />
+                </Routes>
+              </div>
+            </BrowserRouter>
           </Grid.Row>
         </Grid>
       </Container>
