@@ -3,47 +3,33 @@ import sha256 from 'sha256';
 import {Form, Input, Grid, Card, Statistic, TextArea, Label, Button, Table, Tab} from 'semantic-ui-react';
 
 import config from './config';
-import { useSubstrate } from './substrate-lib';
-import { TxButton } from './substrate-lib/components';
-
-import AtochaArweaveStorage from "./AtochaArweaveStorage";
-import AtochaPuzzleAnswer from "./AtochaPuzzleAnswer";
-import AtochaPuzzleCreator from "./AtochaPuzzleCreator";
-import AtochaCommitChallenge from "./AtochaCommitChallenge";
-
-import Balances from './Balances';
-import BlockNumber from './BlockNumber';
-import Events from './Events';
-import Interactor from './Interactor';
-import Metadata from './Metadata';
-import NodeInfo from './NodeInfo';
-import TemplateModule from './TemplateModule';
-import Transfer from './Transfer';
-import Upgrade from './Upgrade';
-import AtochaPalletInfo from "./AtochaPalletInfo";
-import AtochaApplyTokenReward from "./AtochaApplyTokenReward";
+import {useSubstrate, useSubstrateState} from './substrate-lib';
+// import { TxButton } from './substrate-lib/components';
+//
+// import AtochaArweaveStorage from "./Step/AtochaArweaveStorage";
+// import AtochaPuzzleAnswer from "./Step/AtochaPuzzleAnswer";
+// import AtochaPuzzleCreator from "./Step/AtochaPuzzleCreator";
+// import AtochaCommitChallenge from "./Step/AtochaCommitChallenge";
+//
+// import Balances from './Balances';
+// import BlockNumber from './BlockNumber';
+// import Events from './Events';
+// import Interactor from './Interactor';
+// import Metadata from './Metadata';
+// import NodeInfo from './NodeInfo';
+// import TemplateModule from './TemplateModule';
+// import Transfer from './Transfer';
+// import Upgrade from './Upgrade';
+// import AtochaPalletInfo from "./Step/AtochaPalletInfo";
+// import AtochaApplyTokenReward from "./AtochaApplyTokenReward";
 import ArweaveTitle from "./Arweave/ArweaveTitle";
-
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  useQuery,
-  gql
-} from "@apollo/client";
 
 import ClientAtochaCreator from "./AtochaClient/ClientAtochaCreator";
 
 function Main (props) {
-  const { api } = useSubstrate();
-  const { accountPair } = props;
-
+  const { api } = useSubstrateState();
+  const { accountPair, apollo_client, gql } = props;
   const [puzzleList, setPuzzleList] = useState([]);
-
-  const apollo_client = new ApolloClient({
-    uri: 'http://localhost:3010',
-    cache: new InMemoryCache()
-  });
 
   async function loadPuzlleList() {
     apollo_client.query({
@@ -78,19 +64,17 @@ function Main (props) {
       `
     }).then(result => {
       console.log("result.data. = ", result.data); // puzzleCreatedEvents
-      // puzzleList.set(purchase_id, result.data.newPurchasedRequestEvent);
       setPuzzleList(result.data.puzzleCreatedEvents.nodes);
     });
   }
 
   // Puzzle information.
-
   useEffect(async () => {
     await loadPuzlleList();
   }, []);
 
   return (
-      <ApolloProvider client={apollo_client}>
+      <div>
         <Grid.Row>
           <Grid.Column width={8}>
             <h1>Atocha puzzle list.</h1>
@@ -122,15 +106,15 @@ function Main (props) {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column>
-            <ClientAtochaCreator accountPair={accountPair} />
+            <ClientAtochaCreator />
           </Grid.Column>
         </Grid.Row>
-      </ApolloProvider>
+      </div>
   );
 }
 
 export default function PuzzleList (props) {
-  const { api } = useSubstrate();
+  const { api } = useSubstrateState();
   return api.query
     ? <Main {...props} />
     : null;

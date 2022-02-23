@@ -2,22 +2,22 @@ import React, { useEffect, useState } from 'react';
 import sha256 from 'sha256';
 import {Form, Input, Grid, Card, Statistic, TextArea, Label, Button, Container} from 'semantic-ui-react';
 
-import { useSubstrate } from './substrate-lib';
+import {useSubstrate, useSubstrateState} from './substrate-lib';
 import { TxButton } from './substrate-lib/components';
 import NodeInfo from './NodeInfo';
 import Metadata from './Metadata';
 import BlockNumber from './BlockNumber';
-import AtochaPalletInfo from './AtochaPalletInfo';
-import AtochaArweaveStorage from './AtochaArweaveStorage';
-import AtochaPuzzleCreator from './AtochaPuzzleCreator';
-import AtochaPuzzleAnswer from './AtochaPuzzleAnswer';
-import AtochaCommitChallenge from './AtochaCommitChallenge';
+import AtochaPalletInfo from './Step/AtochaPalletInfo';
+import AtochaArweaveStorage from './Step/AtochaArweaveStorage';
+import AtochaPuzzleCreator from './Step/AtochaPuzzleCreator';
+import AtochaPuzzleAnswer from './Step/AtochaPuzzleAnswer';
+import AtochaCommitChallenge from './Step/AtochaCommitChallenge';
 import AtochaApplyTokenReward from './AtochaApplyTokenReward';
 import Balances from './Balances';
 import Transfer from './Transfer';
 
 function Main (props) {
-  const { api } = useSubstrate();
+  const { api } = useSubstrateState();
   const { accountPair } = props;
 
   // Puzzle information.
@@ -88,36 +88,36 @@ function Main (props) {
                   <BlockNumber finalized />
               </Grid.Row>
               <Grid.Row stretched>
-                  <AtochaPalletInfo accountPair={accountPair} />
+                  <AtochaPalletInfo />
               </Grid.Row>
               <Grid.Row stretched>
-                  <AtochaArweaveStorage accountPair={accountPair} />
+                  <AtochaArweaveStorage />
               </Grid.Row>
               <Grid.Row stretched>
-                  <AtochaPuzzleCreator accountPair={accountPair} />
+                  <AtochaPuzzleCreator />
               </Grid.Row>
               <Grid.Row stretched>
-                  <AtochaPuzzleAnswer accountPair={accountPair} />
+                  <AtochaPuzzleAnswer />
               </Grid.Row>
               <Grid.Row stretched>
-                  <AtochaCommitChallenge accountPair={accountPair} />
+                  <AtochaCommitChallenge />
               </Grid.Row>
               <Grid.Row stretched>
-                  <AtochaApplyTokenReward accountPair={accountPair} />
+                  <AtochaApplyTokenReward />
               </Grid.Row>
               <Grid.Row stretched>
                   <Balances />
               </Grid.Row>
               <Grid.Row>
-                  <Transfer accountPair={accountPair} />
+                  {/*<Transfer />*/}
               </Grid.Row>
           </Grid>
       </Container>
   );
 }
 
-export default function PuzzleList (props) {
-  const { api } = useSubstrate();
+export default function StepCase (props) {
+  const { api } = useSubstrateState();
   return api.query
     ? <Main {...props} />
     : null;

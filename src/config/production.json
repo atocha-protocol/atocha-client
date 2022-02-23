@@ -1,4 +1,3 @@
 {
-  "PROVIDER_SOCKET": "ws://148.72.247.143:8844",
-  "ARWEAVE_HTTP": "http://148.72.247.143:8000/ar"
+  "PROVIDER_SOCKET": "wss://dev-node.substrate.dev"
 }

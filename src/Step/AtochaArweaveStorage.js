@@ -3,16 +3,15 @@ import sha256 from 'sha256';
 import {Form, Input, Grid, Card, Statistic, TextArea, Label} from 'semantic-ui-react';
 import axios from 'axios';
 
-import config from './config';
+import config from '../config';
 
 
-import { useSubstrate } from './substrate-lib';
-import { TxButton } from './substrate-lib/components';
-import MakeAnswerSha256WithSimple from "./units/MakeAnswerSha256";
+import {useSubstrate, useSubstrateState} from '../substrate-lib';
+import { TxButton } from '../substrate-lib/components';
+import MakeAnswerSha256WithSimple from "../units/MakeAnswerSha256";
 
 function Main (props) {
-  const { api } = useSubstrate();
-  const { accountPair } = props;
+  const { api } = useSubstrateState();
 
   // Puzzle information.
   const [answerHash, setAnswerHash] = useState('');
@@ -31,9 +30,6 @@ function Main (props) {
 
 
   useEffect(() => {
-    // let unsubscribe;
-    //
-    // return () => unsubscribe && unsubscribe();
     let storageJson = {
       puzzle_title: puzzleTitle,
       puzzle_content: [
@@ -122,10 +118,23 @@ function Main (props) {
           />
         </Form.Field>
         <Form.Field style={{ textAlign: 'center' }}>
+          {/*<TxButton*/}
+          {/*    accountPair={accountPair}*/}
+          {/*    label='Submit'*/}
+          {/*    type='SIGNED-TX'*/}
+          {/*    setStatus={setStatus}*/}
+          {/*    refStatus={statusChange}*/}
+          {/*    attrs={{*/}
+          {/*      palletRpc: 'atochaFinace',*/}
+          {/*      callable: 'preStorage',*/}
+          {/*      inputParams: [storageHash, storageLength, maxFee],*/}
+          {/*      paramFields: [true, true, true]*/}
+          {/*    }}*/}
+          {/*/>*/}
+
           <TxButton
-              accountPair={accountPair}
-              label='Submit'
-              type='SIGNED-TX'
+              label="Submit"
+              type="SIGNED-TX"
               setStatus={setStatus}
               refStatus={statusChange}
               attrs={{
@@ -145,7 +154,7 @@ function Main (props) {
 }
 
 export default function AtochaArweaveStorage (props) {
-  const { api } = useSubstrate();
+  const { api } = useSubstrateState();
   return api.query
     ? <Main {...props} />
     : null;

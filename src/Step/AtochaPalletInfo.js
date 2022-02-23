@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Icon, Grid } from 'semantic-ui-react';
 
-import { useSubstrate } from './substrate-lib';
+import {useSubstrate, useSubstrateState} from '../substrate-lib';
 
 function Main (props) {
-  const { api, socket } = useSubstrate();
+  const { api, socket } = useSubstrateState();
   const [palletInfo, setPalletInfo] = useState({});
   const [blockNumber, setBlockNumber] = useState(0);
   const [currentAddress, setCurrentAddress] = useState('');
@@ -87,7 +87,7 @@ function Main (props) {
           // exchangeMaxRewardListSize: exchangeMaxRewardListSize.toString(),
           // exchangeEraLength: exchangeEraLength.toString(),
           // currentExchangeRewardEra: currentExchangeRewardEra.isSome ? currentExchangeRewardEra.value.toNumber() : 'Null',
-          lastExchangeRewardEra: lastExchangeRewardEra.isSome ? lastExchangeRewardEra.value.toNumber() : 'Null',
+          lastExchangeRewardEra: lastExchangeRewardEra?lastExchangeRewardEra.isSome ? lastExchangeRewardEra.value.toNumber() : 'Null':'Null',
           // perEraOfBlockNumber: perEraOfBlockNumber.toNumber()
         });
         // console.log('exchangeMaxRewardListSize = ', minBonusOfPuzzle, exchangeMaxRewardListSize);
@@ -153,7 +153,7 @@ function Main (props) {
 }
 
 export default function AtochaPalletInfo (props) {
-  const { api } = useSubstrate();
+  const { api } = useSubstrateState();
   return api.query &&
     api.query.atochaModule &&
     api.query.atochaFinace

@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 import sha256 from 'sha256';
 import {Form, Input, Grid, Card, Statistic, TextArea, Label, Button} from 'semantic-ui-react';
 
-import { useSubstrate } from './substrate-lib';
-import { TxButton } from './substrate-lib/components';
+import {useSubstrate, useSubstrateState} from '../substrate-lib';
+import { TxButton } from '../substrate-lib/components';
 
 function Main (props) {
-  const { api } = useSubstrate();
-  const { accountPair } = props;
+  const { api } = useSubstrateState();
 
   // Puzzle information.
   const [answerHash, setAnswerHash] = useState('');
@@ -120,7 +119,6 @@ function Main (props) {
         </Form.Field>
         <Form.Field style={{ textAlign: 'center' }}>
           <TxButton
-              accountPair={accountPair}
               label='Submit'
               type='SIGNED-TX'
               setStatus={setStatus}
@@ -159,7 +157,7 @@ function Main (props) {
 }
 
 export default function AtochaPuzzleCreator (props) {
-  const { api } = useSubstrate();
+  const { api } = useSubstrateState();
   return api.query
     ? <Main {...props} />
     : null;

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Grid, Card, Statistic, TextArea, Label, Table, Container } from 'semantic-ui-react';
 
-import { useSubstrate } from './substrate-lib';
+import {useSubstrate, useSubstrateState} from './substrate-lib';
 import { TxButton } from './substrate-lib/components';
 
 function Main (props) {
-  const { api } = useSubstrate();
-  const { accountPair } = props;
+  const { api } = useSubstrateState();
 
   // Puzzle information.
   const [exchangeInfo, setExchangeInfo] = useState([]);
@@ -71,7 +70,6 @@ function Main (props) {
 
         <Form.Field style={{ textAlign: 'center' }}>
           <TxButton
-              accountPair={accountPair}
               label='Apply point reward'
               type='SIGNED-TX'
               setStatus={setStatus}
@@ -91,7 +89,7 @@ function Main (props) {
 }
 
 export default function AtochaApplyTokenReward (props) {
-  const { api } = useSubstrate();
+  const { api } = useSubstrateState();
   return api.query
     ? <Main {...props} />
     : null;

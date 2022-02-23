@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import config from '../config';
 
-import { useSubstrate } from '../substrate-lib';
+import {useSubstrate, useSubstrateState} from '../substrate-lib';
 import { TxButton } from '../substrate-lib/components';
 import MakeAnswerSha256WithSimple from '../units/MakeAnswerSha256';
 import { web3FromSource } from '@polkadot/extension-dapp';
@@ -20,7 +20,7 @@ import {
 } from "@apollo/client";
 
 function Main (props) {
-  const { api } = useSubstrate();
+  const { api } = useSubstrateState();
   const { accountPair } = props;
   const getFromAcct = async () => {
     const {
@@ -251,7 +251,7 @@ function Main (props) {
 }
 
 export default function ClientAtochaCreator (props) {
-  const { api } = useSubstrate();
+  const { api } = useSubstrateState();
   const { accountPair } = props;
   return api.query && accountPair
     ? <Main {...props} />
