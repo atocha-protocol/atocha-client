@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import sha256 from 'sha256';
 import {Form, Input, Grid, Card, Statistic, TextArea, Label, Button, Table, Tab} from 'semantic-ui-react';
 
-import config from './config';
-import {useSubstrate, useSubstrateState} from './substrate-lib';
+import config from '../config';
+import {useSubstrate, useSubstrateState} from '../substrate-lib';
 // import { TxButton } from './substrate-lib/components';
 //
 // import AtochaArweaveStorage from "./Step/AtochaArweaveStorage";
@@ -22,14 +22,16 @@ import {useSubstrate, useSubstrateState} from './substrate-lib';
 // import Upgrade from './Upgrade';
 // import AtochaPalletInfo from "./Step/AtochaPalletInfo";
 // import AtochaApplyTokenReward from "./AtochaApplyTokenReward";
-import ArweaveTitle from "./Arweave/ArweaveTitle";
+import ArweaveTitle from "./ArweaveTitle";
 
-import ClientAtochaCreator from "./AtochaClient/ClientAtochaCreator";
+import ClientAtochaCreator from "./ClientAtochaCreator";
 
 function Main (props) {
   const { api } = useSubstrateState();
   const { accountPair, apollo_client, gql } = props;
   const [puzzleList, setPuzzleList] = useState([]);
+  const [newPuzzle, setNewPuzzle] = useState(null);
+
 
   async function loadPuzlleList() {
     apollo_client.query({
@@ -37,6 +39,7 @@ function Main (props) {
         query{
           puzzleCreatedEvents(last:1000,orderBy:EVENT_BN_DESC){
             nodes{
+              who,
               puzzleHash,
               createBn,
               eventBn,
@@ -71,16 +74,17 @@ function Main (props) {
   // Puzzle information.
   useEffect(async () => {
     await loadPuzlleList();
-  }, []);
+  }, [newPuzzle]);
 
   return (
       <div>
         <Grid.Row>
           <Grid.Column width={8}>
-            <h1>Atocha puzzle list.</h1>
+            <h1>Atocha puzzle list. </h1>
             <Table>
               <Table.Body>
                 <Table.Row>
+                  <Table.Cell>Creator</Table.Cell>
                   <Table.Cell>Puzzle title</Table.Cell>
                   <Table.Cell>On chain bn</Table.Cell>
                   <Table.Cell>Answer status</Table.Cell>
@@ -88,6 +92,7 @@ function Main (props) {
                   <Table.Cell>Challenge period remaining</Table.Cell>
                 </Table.Row>
                 {puzzleList.map(puzzleObj=><Table.Row key={puzzleObj.puzzleHash}>
+                  <Table.Cell>{puzzleObj.who}</Table.Cell>
                   <Table.Cell><ArweaveTitle puzzle_hash={puzzleObj.puzzleHash}/></Table.Cell>
                   <Table.Cell>
                     <a href={`${config.POLKADOT_EXPLORE}/?rpc=ws%3A%2F%2F148.72.247.143%3A8844#/explorer/query/${puzzleObj.eventHash}`} target="_blank">
@@ -106,7 +111,7 @@ function Main (props) {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column>
-            <ClientAtochaCreator />
+            <ClientAtochaCreator setNewPuzzle={setNewPuzzle} />
           </Grid.Column>
         </Grid.Row>
       </div>

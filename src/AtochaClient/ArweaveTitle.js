@@ -3,6 +3,10 @@ import sha256 from 'sha256';
 import {Form, Input, Grid, Card, Statistic, TextArea, Label, Button, Table} from 'semantic-ui-react';
 import config from '../config';
 import axios from "axios";
+import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
+import PuzzleList from "./PuzzleList";
+import {gql} from "@apollo/client";
+import StepCase from "../Step/StepCase";
 
 function Main (props) {
   const { puzzle_hash } = props;
@@ -26,10 +30,10 @@ function Main (props) {
     if(puzzleInfo===null) {
       loadJsonData();
     }
-  }, [puzzleInfo]);
+  }, [setPuzzleInfo]);
 
   return (
-    <span><a href={`${request}`} target="_blank">{puzzleInfo?puzzleInfo.puzzle_title:'*'}</a></span>
+      <Link to={`/puzzle_detail/${puzzle_hash}`}>{puzzleInfo?puzzleInfo.puzzle_title:'*'}</Link>
   );
 }
 

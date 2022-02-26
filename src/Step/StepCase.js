@@ -2,23 +2,22 @@ import React, { useEffect, useState } from 'react';
 import sha256 from 'sha256';
 import {Form, Input, Grid, Card, Statistic, TextArea, Label, Button, Container} from 'semantic-ui-react';
 
-import {useSubstrate, useSubstrateState} from './substrate-lib';
-import { TxButton } from './substrate-lib/components';
-import NodeInfo from './NodeInfo';
-import Metadata from './Metadata';
-import BlockNumber from './BlockNumber';
-import AtochaPalletInfo from './Step/AtochaPalletInfo';
-import AtochaArweaveStorage from './Step/AtochaArweaveStorage';
-import AtochaPuzzleCreator from './Step/AtochaPuzzleCreator';
-import AtochaPuzzleAnswer from './Step/AtochaPuzzleAnswer';
-import AtochaCommitChallenge from './Step/AtochaCommitChallenge';
+import {useSubstrate, useSubstrateState} from '../substrate-lib';
+import { TxButton } from '../substrate-lib/components';
+import NodeInfo from '../NodeInfo';
+import Metadata from '../Metadata';
+import BlockNumber from '../BlockNumber';
+import AtochaPalletInfo from './AtochaPalletInfo';
+import AtochaArweaveStorage from './AtochaArweaveStorage';
+import AtochaPuzzleCreator from './AtochaPuzzleCreator';
+import AtochaPuzzleAnswer from './AtochaPuzzleAnswer';
+import AtochaCommitChallenge from './AtochaCommitChallenge';
 import AtochaApplyTokenReward from './AtochaApplyTokenReward';
-import Balances from './Balances';
-import Transfer from './Transfer';
+import Balances from '../Balances';
+import Transfer from '../Transfer';
 
 function Main (props) {
   const { api } = useSubstrateState();
-  const { accountPair } = props;
 
   // Puzzle information.
   const [answerHash, setAnswerHash] = useState('');

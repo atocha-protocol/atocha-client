@@ -20,13 +20,14 @@ import {
 } from "@apollo/client";
 
 function Main (props) {
-  const { api } = useSubstrateState();
-  const { accountPair } = props;
+  let eventTimer = 0;
+  const {setNewPuzzle} = props;
+  const { api, currentAccount } = useSubstrateState();
   const getFromAcct = async () => {
     const {
       address,
       meta: { source, isInjected }
-    } = accountPair;
+    } = currentAccount;
     let fromAcct;
     if (isInjected) {
       const injected = await web3FromSource(source);
@@ -37,6 +38,7 @@ function Main (props) {
     }
     return fromAcct;
   };
+
   const apollo_client = new ApolloClient({
     uri: 'http://localhost:3010',
     cache: new InMemoryCache()
@@ -60,10 +62,11 @@ function Main (props) {
       query: gql(query_str),
       fetchPolicy: 'no-cache'
     }).then(result => {
-      console.log("result.data. = ", puzzleStatusInterval, result.data.puzzleCreatedEvents.totalCount); // puzzleCreatedEvents
-      if (result.data.puzzleCreatedEvents.totalCount > 0 && puzzleStatusInterval) {
+      console.log("result.data. = ", eventTimer, result.data.puzzleCreatedEvents.totalCount);
+      if (result.data.puzzleCreatedEvents.totalCount > 0 && eventTimer) {
         console.log("loadPuzzleCreateEventStatus C ---");
-        clearInterval(puzzleStatusInterval);
+        clearInterval(eventTimer);
+        setNewPuzzle(puzzle_hash)
       }
       setPuzzleStatus(result.data.puzzleCreatedEvents.totalCount);
     });
@@ -103,8 +106,7 @@ function Main (props) {
     setStorageLength(jsonStr.length);
     setStorageHash(jsonHash);
     console.log('JSON:', jsonStr, jsonStr.length);
-    console.log('user Effect.', jsonHash);
-    loadPuzzleCreateEventStatus('aaa');
+    console.log('user Effect.', currentAccount);
   }, [api.query.atochaFinace, puzzleTitle, puzzleTextContent, puzzleFileContent]);
 
   function statusChange (newStatus) {
@@ -137,11 +139,9 @@ function Main (props) {
     console.log(`Puzzle hash: ${puzzle_hash}, Puzzle answer: ${answer_hash}, deposit = ${deposit}`);
     setStatus("submit puzzle info to atocha chain.")
     const fromAcct = await getFromAcct();
-    console.log('getFromAcct B  == ', fromAcct);
     const unsub = await api.tx.atochaModule
       .createPuzzle(puzzle_hash, answer_hash, deposit, 1)
       .signAndSend(fromAcct, (result) => {
-        console.log(`Current status is ${result.status}`);
         setStatus(`submit status: ${result.status}`);
         if (result.status.isInBlock) {
           setStatus(`submit status: ${result.status} - ${result.status.asInBlock}`);
@@ -158,10 +158,9 @@ function Main (props) {
       alert("Puzzle or Answer hash not be empty!");
       return;
     }
-    const t = setInterval(()=>{
+    eventTimer = setInterval(()=>{
       loadPuzzleCreateEventStatus(puzzle_hash);
-    }, 1000);
-    setPuzzleStatusInterval(t);
+    }, 2000);
   }
 
   function countDeposit (num) {
@@ -230,7 +229,6 @@ function Main (props) {
         </Form.Field>
         <Form.Field style={{ textAlign: 'center' }}>
           <TxButton
-              accountPair={accountPair}
               label='Submit'
               type='SIGNED-TX'
               setStatus={setStatus}
@@ -252,8 +250,7 @@ function Main (props) {
 
 export default function ClientAtochaCreator (props) {
   const { api } = useSubstrateState();
-  const { accountPair } = props;
-  return api.query && accountPair
+  return api.query
     ? <Main {...props} />
     : null;
 }

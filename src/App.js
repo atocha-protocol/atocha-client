@@ -22,8 +22,8 @@ import Metadata from './Metadata'
 import NodeInfo from './NodeInfo'
 import TemplateModule from './TemplateModule'
 import Transfer from './Transfer'
-import PuzzleList from "./PuzzleList";
-import StepCase from "./StepCase";
+import PuzzleList from "./AtochaClient/PuzzleList";
+import StepCase from "./Step/StepCase";
 // import Upgrade from './Upgrade'
 
 import {
@@ -33,6 +33,7 @@ import {
   useQuery,
   gql
 } from "@apollo/client";
+import PuzzleDetail from "./AtochaClient/PuzzleDetail";
 
 function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState()
@@ -95,6 +96,7 @@ function Main() {
                 <Routes>
                   <Route path="/puzzle_list" element={<PuzzleList apollo_client={apollo_client} gql={gql} />} />
                   <Route path="/step_case" element={<StepCase />} />
+                  <Route path="/puzzle_detail/:puzzle_hash" element={<PuzzleDetail />} />
                 </Routes>
               </div>
             </BrowserRouter>
