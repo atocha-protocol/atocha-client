@@ -28,7 +28,7 @@ import ClientAtochaCreator from "./ClientAtochaCreator";
 
 function Main (props) {
   const { api } = useSubstrateState();
-  const { accountPair, apollo_client, gql } = props;
+  const { apollo_client, gql } = props;
   const [puzzleList, setPuzzleList] = useState([]);
   const [newPuzzle, setNewPuzzle] = useState(null);
 
@@ -80,7 +80,7 @@ function Main (props) {
       <div>
         <Grid.Row>
           <Grid.Column width={8}>
-            <h1>Atocha puzzle list. </h1>
+            <h1>Atocha puzzle list</h1>
             <Table>
               <Table.Body>
                 <Table.Row>

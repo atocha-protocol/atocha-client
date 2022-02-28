@@ -96,7 +96,7 @@ function Main() {
                 <Routes>
                   <Route path="/puzzle_list" element={<PuzzleList apollo_client={apollo_client} gql={gql} />} />
                   <Route path="/step_case" element={<StepCase />} />
-                  <Route path="/puzzle_detail/:puzzle_hash" element={<PuzzleDetail />} />
+                  <Route path="/puzzle_detail/:puzzle_hash" element={<PuzzleDetail apollo_client={apollo_client} gql={gql} />} />
                 </Routes>
               </div>
             </BrowserRouter>
