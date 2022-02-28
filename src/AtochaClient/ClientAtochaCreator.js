@@ -40,7 +40,7 @@ function Main (props) {
   };
 
   const apollo_client = new ApolloClient({
-    uri: 'http://localhost:3010',
+    uri: config.SUBQUERY_HTTP,
     cache: new InMemoryCache()
   });
 

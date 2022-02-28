@@ -1,7 +1,7 @@
 {
   "PROVIDER_SOCKET": "ws://148.72.247.143:8844",
   "ARWEAVE_HTTP": "http://148.72.247.143:8000/ar",
-  "SUBQUERY_HTTP": "http://localhost:3010",
+  "SUBQUERY_HTTP": "http://148.72.247.143:3010",
   "ARWEAVE_EXPLORE": "http://148.72.247.143:1984",
   "POLKADOT_EXPLORE": "http://148.72.247.143:4000"
 }

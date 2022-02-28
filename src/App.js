@@ -9,6 +9,7 @@ import {
 } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import { Routes, Route, Link, BrowserRouter} from "react-router-dom";
+import config from './config';
 
 import { SubstrateContextProvider, useSubstrateState } from './substrate-lib'
 import { DeveloperConsole } from './substrate-lib/components'
@@ -39,7 +40,7 @@ function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState()
 
   const apollo_client = new ApolloClient({
-    uri: 'http://localhost:3010',
+    uri: config.SUBQUERY_HTTP,
     cache: new InMemoryCache()
   });
 
