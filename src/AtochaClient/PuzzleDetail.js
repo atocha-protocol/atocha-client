@@ -14,6 +14,7 @@ import {
 import PuzzleAnswer from "./PuzzleAnswer";
 import AnswerList from "./AnswerList";
 import ChallengeList from "./ChallengeList";
+import SponsorList from "./SponsorList";
 
 function Main (props) {
     const {apollo_client, gpl} = props;
@@ -52,6 +53,14 @@ function Main (props) {
               <h2>>> Solve it</h2>
               <div>Be the first one to submit a matched answer...</div>
               <AnswerList puzzle_hash={puzzle_hash} apollo_client={apollo_client} gql={gql}  />
+          </Grid.Row>
+          <Grid.Row>
+              <hr/>
+          </Grid.Row>
+          <Grid.Row>
+              <h2>>> Sponsor it</h2>
+              <div>.</div>
+              <SponsorList puzzle_hash={puzzle_hash} apollo_client={apollo_client} gql={gql}  />
           </Grid.Row>
           <Grid.Row>
               <hr/>
