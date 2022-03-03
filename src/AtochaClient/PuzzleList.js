@@ -25,10 +25,11 @@ import {useSubstrate, useSubstrateState} from '../substrate-lib';
 import ArweaveTitle from "./ArweaveTitle";
 
 import ClientAtochaCreator from "./ClientAtochaCreator";
+import {useAtoContext, useAtoContextState} from "./AtoContext";
 
 function Main (props) {
+  const {apollo_client, gql } = useAtoContext()
   const { api } = useSubstrateState();
-  const { apollo_client, gql } = props;
   const [puzzleList, setPuzzleList] = useState([]);
   const [newPuzzle, setNewPuzzle] = useState(null);
 
@@ -120,7 +121,8 @@ function Main (props) {
 
 export default function PuzzleList (props) {
   const { api } = useSubstrateState();
-  return api.query
+  const { apollo_client, gql } = useAtoContext()
+  return api.query && apollo_client && gql
     ? <Main {...props} />
     : null;
 }

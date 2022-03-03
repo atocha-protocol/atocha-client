@@ -59,16 +59,17 @@ function TxButton({
     return [address, { signer: injector.signer }]
   }
 
-  const txResHandler = ({ status }) =>
-    status.isFinalized
-      ? finalizedTriger(status)
-      : setStatus(`Current transaction status: ${status.type}`)
+  const txResHandler = ({ status }) =>{
+    extendsTriger(status)
+    return status.isFinalized
+        ? setStatus(`😉 Finalized. Block hash: ${status.asFinalized.toString()}`)
+        : setStatus(`Current transaction status: ${status.type}`);
+  }
 
-  function finalizedTriger(status) {
+  function extendsTriger(status) {
     if(refStatus) {
       refStatus(status)
     }
-    return setStatus(`😉 Finalized. Block hash: ${status.asFinalized.toString()}`)
   }
 
 

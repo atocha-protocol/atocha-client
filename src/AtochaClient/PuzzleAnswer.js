@@ -5,10 +5,12 @@ import {useSubstrate, useSubstrateState} from '../substrate-lib';
 import { TxButton } from '../substrate-lib/components';
 import AnswerList from "./AnswerList";
 import {gql} from "@apollo/client";
+import {useAtoContext} from "./AtoContext";
 
 function Main (props) {
   const { api } = useSubstrateState();
-  const { puzzle_hash, apollo_client, gql } = props;
+  const { puzzle_hash } = props;
+  const { apollo_client, gql } = useAtoContext()
 
   // Puzzle information.
   const [answerTxt, setAnswerTxt] = useState('');
@@ -66,7 +68,8 @@ function Main (props) {
 
 export default function PuzzleAnswer (props) {
   const { api } = useSubstrateState();
-  const { puzzle_hash, apollo_client, gql } = props;
+  const { puzzle_hash } = props;
+  const { apollo_client, gql } = useAtoContext()
   return api.query && puzzle_hash && apollo_client && gql
       ? <Main {...props} />
       : null;

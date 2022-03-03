@@ -9,20 +9,24 @@ import {useSubstrate, useSubstrateState} from '../substrate-lib';
 import { TxButton } from '../substrate-lib/components';
 import MakeAnswerSha256WithSimple from '../units/MakeAnswerSha256';
 import { web3FromSource } from '@polkadot/extension-dapp';
+import {useAtoContext} from "./AtoContext";
 
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  useQuery,
-  useApolloClient,
-  gql
-} from "@apollo/client";
+// import {
+//   ApolloClient,
+//   InMemoryCache,
+//   ApolloProvider,
+//   useQuery,
+//   useApolloClient,
+//   gql
+// } from "@apollo/client";
+// import {useAtoContext} from "./AtoContext";
 
 function Main (props) {
   let eventTimer = 0;
   const {setNewPuzzle} = props;
   const { api, currentAccount } = useSubstrateState();
+  const { apollo_client, gql } = useAtoContext()
+
   const getFromAcct = async () => {
     const {
       address,
@@ -39,10 +43,10 @@ function Main (props) {
     return fromAcct;
   };
 
-  const apollo_client = new ApolloClient({
-    uri: config.SUBQUERY_HTTP,
-    cache: new InMemoryCache()
-  });
+  // const apollo_client = new ApolloClient({
+  //   uri: config.SUBQUERY_HTTP,
+  //   cache: new InMemoryCache()
+  // });
 
   async function loadPuzzleCreateEventStatus(puzzle_hash) {
     if (puzzle_hash === undefined || puzzle_hash === "") {
@@ -110,7 +114,10 @@ function Main (props) {
   }, [api.query.atochaFinace, puzzleTitle, puzzleTextContent, puzzleFileContent]);
 
   function statusChange (newStatus) {
-    if (newStatus.isFinalized) {
+    console.log(newStatus)
+    if (newStatus.isInBlock) {
+      console.log("Is InBlock")
+      setStatus("Extrinsic success.")
       console.log('Send data to arweave.');
       axios.post(config.ARWEAVE_HTTP, storageJson).then(response => {
         console.log('Request data: ', response.data);
@@ -125,8 +132,8 @@ function Main (props) {
         console.log('Catch err:', err);
       });
     } else {
-      setPuzzleHash('');
-      setAnswerHash('');
+      console.log("Not InBlock")
+      setStatus("Extrinsic failed.")
     }
   }
 
@@ -250,7 +257,8 @@ function Main (props) {
 
 export default function ClientAtochaCreator (props) {
   const { api } = useSubstrateState();
-  return api.query
+  const { apollo_client, gql } = useAtoContext()
+  return api.query && apollo_client && gql
     ? <Main {...props} />
     : null;
 }

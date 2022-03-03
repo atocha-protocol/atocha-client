@@ -15,9 +15,11 @@ import PuzzleAnswer from "./PuzzleAnswer";
 import AnswerList from "./AnswerList";
 import ChallengeList from "./ChallengeList";
 import SponsorList from "./SponsorList";
+import {useAtoContext} from "./AtoContext";
+import {useSubstrateState} from "../substrate-lib";
 
 function Main (props) {
-    const {apollo_client, gpl} = props;
+    const { apollo_client, gql } = useAtoContext()
     let {puzzle_hash} = useParams();
     let request = `${config.ARWEAVE_EXPLORE}/${puzzle_hash}`;
     let [puzzleInfo, setPuzzleInfo] = useState(null);
@@ -75,7 +77,9 @@ function Main (props) {
 }
 
 export default function PuzzleDetail (props) {
-  return true
-    ? <Main {...props} />
-    : null;
+    const { api } = useSubstrateState();
+    const { apollo_client, gql } = useAtoContext()
+    return api.query && apollo_client && gql
+        ? <Main {...props} />
+        : null;
 }

@@ -27,22 +27,23 @@ import PuzzleList from "./AtochaClient/PuzzleList";
 import StepCase from "./Step/StepCase";
 // import Upgrade from './Upgrade'
 
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  useQuery,
-  gql
-} from "@apollo/client";
+// import {
+//   ApolloClient,
+//   InMemoryCache,
+//   ApolloProvider,
+//   useQuery,
+//   gql
+// } from "@apollo/client";
 import PuzzleDetail from "./AtochaClient/PuzzleDetail";
+import {AtoContextProvider} from "./AtochaClient/AtoContext";
 
 function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState()
 
-  const apollo_client = new ApolloClient({
-    uri: config.SUBQUERY_HTTP,
-    cache: new InMemoryCache()
-  });
+  // const apollo_client = new ApolloClient({
+  //   uri: config.SUBQUERY_HTTP,
+  //   cache: new InMemoryCache()
+  // });
 
   const loader = text => (
     <Dimmer active>
@@ -95,9 +96,9 @@ function Main() {
                 <h3><Link to="/puzzle_list">Atocha Puzzle Client</Link></h3>
                 <h3><Link to="/step_case">StepCase</Link></h3>
                 <Routes>
-                  <Route path="/puzzle_list" element={<PuzzleList apollo_client={apollo_client} gql={gql} />} />
+                  <Route path="/puzzle_list" element={<PuzzleList />} />
                   <Route path="/step_case" element={<StepCase />} />
-                  <Route path="/puzzle_detail/:puzzle_hash" element={<PuzzleDetail apollo_client={apollo_client} gql={gql} />} />
+                  <Route path="/puzzle_detail/:puzzle_hash" element={<PuzzleDetail />} />
                 </Routes>
               </div>
             </BrowserRouter>
@@ -121,7 +122,9 @@ function Main() {
 export default function App() {
   return (
     <SubstrateContextProvider>
-      <Main />
+      <AtoContextProvider>
+        <Main />
+      </AtoContextProvider>
     </SubstrateContextProvider>
   )
 }

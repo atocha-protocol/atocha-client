@@ -3,10 +3,12 @@ import { Form, Input, Grid, Card, Statistic, TextArea, Label } from 'semantic-ui
 
 import {useSubstrate, useSubstrateState} from '../substrate-lib';
 import { TxButton } from '../substrate-lib/components';
+import {useAtoContext} from "./AtoContext";
 
 function Main (props) {
   const { api } = useSubstrateState();
-  const { puzzle_hash, apollo_client, gql } = props;
+  const { puzzle_hash } = props;
+  const { apollo_client, gql } = useAtoContext()
 
   // Puzzle information.
   const [deposit, setDeposit] = useState(0);
@@ -23,8 +25,13 @@ function Main (props) {
   }
 
   function statusChange (newStatus) {
-    if (newStatus.isFinalized) {
+    console.log(newStatus)
+    if (newStatus.isInBlock) {
+      console.log("Is InBlock")
+      setStatus("Extrinsic success.")
     } else {
+      console.log("Not InBlock")
+      setStatus("Extrinsic failed.")
     }
   }
 

@@ -14,6 +14,28 @@ function Main (props) {
   // const [puzzleHash, setPuzzleHash] = useState('');
   useEffect(() => {
 
+
+    // Subscribe to system events via storage
+    api.query.system.events((events) => {
+      console.log(`\nReceived ${events.length} events:`);
+
+      // Loop through the Vec<EventRecord>
+      events.forEach((record) => {
+        // Extract the phase, event and the event types
+        const { event, phase } = record;
+        const types = event.typeDef;
+
+        // Show what we are busy with
+        console.log(`\t${event.section}:${event.method}:: (phase=${phase.toString()})`);
+        console.log(`\t\t${event.meta}`);
+
+        // Loop through each of the parameters, displaying the type and data
+        event.data.forEach((data, index) => {
+          console.log(`\t\t\t${types[index].type}: ${data.toString()}`);
+        });
+      });
+    });
+
   }, [api.query.atochaModule]);
 
   function countDeposit (num) {
@@ -22,8 +44,13 @@ function Main (props) {
   }
 
   function statusChange (newStatus) {
-    if (newStatus.isFinalized) {
+    console.log(newStatus)
+    if (newStatus.isInBlock) {
+      console.log("Is InBlock")
+      setStatus("Extrinsic success.")
     } else {
+      console.log("Not InBlock")
+      setStatus("Extrinsic failed.")
     }
   }
 

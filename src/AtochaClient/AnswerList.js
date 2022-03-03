@@ -6,10 +6,12 @@ import { TxButton } from '../substrate-lib/components';
 import ArweaveTitle from "./ArweaveTitle";
 import config from "../config";
 import PuzzleAnswer from "./PuzzleAnswer";
+import {useAtoContext} from "./AtoContext";
 
 function Main (props) {
   const { api } = useSubstrateState();
-  const { puzzle_hash, apollo_client, gql } = props;
+  const { puzzle_hash } = props;
+  const { apollo_client, gql } = useAtoContext()
 
   // Puzzle information.
   const [answerList, setAnswerList] = useState([]);
@@ -71,7 +73,8 @@ function Main (props) {
 
 export default function AnswerList (props) {
   const { api } = useSubstrateState();
-  const { puzzle_hash, apollo_client, gql } = props;
+  const { puzzle_hash,  } = props;
+  const { apollo_client, gql } = useAtoContext()
   return api.query && puzzle_hash && apollo_client && gql
     ? <Main {...props} />
     : null;
