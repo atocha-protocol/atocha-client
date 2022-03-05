@@ -8,6 +8,7 @@ import config from "../config";
 import PuzzleAnswer from "./PuzzleAnswer";
 import PuzzleCommitChallenge from "./PuzzleCommitChallenge";
 import {useAtoContext} from "./AtoContext";
+import PuzzleChallengeRaising from "./PuzzleChallengeRaising";
 
 function Main (props) {
   const { api } = useSubstrateState();
@@ -53,6 +54,7 @@ function Main (props) {
   return (
     <Grid.Column width={8}>
       <PuzzleCommitChallenge puzzle_hash={puzzle_hash} apollo_client={apollo_client} gql={gql} />
+      <PuzzleChallengeRaising puzzle_hash={puzzle_hash} apollo_client={apollo_client} gql={gql} />
       <h3>Challenge deposit info</h3>
       <Table>
         <Table.Body>

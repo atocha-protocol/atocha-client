@@ -45,16 +45,16 @@ function Main (props) {
               createBn,
               eventBn,
               eventHash,
-              challenge_infos{
+              ref_challenge_infos{
                 totalCount
               },
-              challenge_status(orderBy:EVENT_BN_DESC){
+              ref_challenge_status(orderBy:EVENT_BN_DESC){
                 totalCount,
                 nodes{
                   challengeStatus
                 }
               },
-              answer_infos(orderBy:EVENT_BN_DESC){
+              ref_answer_infos(orderBy:EVENT_BN_DESC){
                 totalCount,
                 nodes{
                   answerContent,
@@ -100,10 +100,10 @@ function Main (props) {
                       {puzzleObj.eventBn}
                     </a>
                   </Table.Cell>
-                  <Table.Cell>{puzzleObj.answer_infos.totalCount == 0?'No':puzzleObj.answer_infos.nodes[0].resultType == 'ANSWER_HASH_IS_MATCH'?'Match':'Not match'}</Table.Cell>
-                  <Table.Cell>{puzzleObj.answer_infos.totalCount == 0?'Not':
-                                  puzzleObj.challenge_status.totalCount == 0?'No':
-                                      puzzleObj.challenge_status.nodes[0].challengeStatus}</Table.Cell>
+                  <Table.Cell>{puzzleObj.ref_answer_infos.totalCount == 0?'No':puzzleObj.ref_answer_infos.nodes[0].resultType == 'ANSWER_HASH_IS_MATCH'?'Match':'Not match'}</Table.Cell>
+                  <Table.Cell>{puzzleObj.ref_answer_infos.totalCount == 0?'Not':
+                                  puzzleObj.ref_challenge_status.totalCount == 0?'No':
+                                      puzzleObj.ref_challenge_status.nodes[0].challengeStatus}</Table.Cell>
                   <Table.Cell>*</Table.Cell>
                 </Table.Row>)}
               </Table.Body>
