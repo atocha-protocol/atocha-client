@@ -4,84 +4,38 @@ import {Form, Input, Grid, Card, Statistic, TextArea, Label, Button, Table, Tab}
 
 import config from '../config';
 import {useSubstrate, useSubstrateState} from '../substrate-lib';
-// import { TxButton } from './substrate-lib/components';
-//
-// import AtochaArweaveStorage from "./Step/AtochaArweaveStorage";
-// import AtochaPuzzleAnswer from "./Step/AtochaPuzzleAnswer";
-// import AtochaPuzzleCreator from "./Step/AtochaPuzzleCreator";
-// import AtochaCommitChallenge from "./Step/AtochaCommitChallenge";
-//
-// import Balances from './Balances';
-// import BlockNumber from './BlockNumber';
-// import Events from './Events';
-// import Interactor from './Interactor';
-// import Metadata from './Metadata';
-// import NodeInfo from './NodeInfo';
-// import TemplateModule from './TemplateModule';
-// import Transfer from './Transfer';
-// import Upgrade from './Upgrade';
-// import AtochaPalletInfo from "./Step/AtochaPalletInfo";
-// import AtochaApplyTokenReward from "./AtochaApplyTokenReward";
 import ArweaveTitle from "./ArweaveTitle";
 
 import ClientAtochaCreator from "./ClientAtochaCreator";
 import {useAtoContext, useAtoContextState} from "./AtoContext";
 
 function Main (props) {
-  const {apollo_client, gql } = useAtoContext()
+  const {apollo_client, gql, puzzleSets: {pubPuzzleList, setPubPuzzleList, setPubPuzzleListType} , chainData: {pubBlockNumber} } = useAtoContext()
   const { api } = useSubstrateState();
-  const [puzzleList, setPuzzleList] = useState([]);
   const [newPuzzle, setNewPuzzle] = useState(null);
 
-
-  async function loadPuzlleList() {
-    apollo_client.query({
-      query: gql`
-        query{
-          puzzleCreatedEvents(last:1000,orderBy:EVENT_BN_DESC){
-            nodes{
-              who,
-              puzzleHash,
-              createBn,
-              eventBn,
-              eventHash,
-              ref_challenge_infos{
-                totalCount
-              },
-              ref_challenge_status(orderBy:EVENT_BN_DESC){
-                totalCount,
-                nodes{
-                  challengeStatus
-                }
-              },
-              ref_answer_infos(orderBy:EVENT_BN_DESC){
-                totalCount,
-                nodes{
-                  answerContent,
-                  eventBn,
-                  resultType
-                }
-              }
-            }
-          }
-        }
-      `
-    }).then(result => {
-      console.log("result.data. = ", result.data); // puzzleCreatedEvents
-      setPuzzleList(result.data.puzzleCreatedEvents.nodes);
-    });
+  function updatePuzzleList(type) {
+    setPubPuzzleListType(type)
   }
 
   // Puzzle information.
   useEffect(async () => {
-    await loadPuzlleList();
+
   }, [newPuzzle]);
 
   return (
       <div>
         <Grid.Row>
           <Grid.Column width={8}>
-            <h1>Atocha puzzle list</h1>
+            <h1>Atocha puzzle list </h1>
+            <div>Current block number: {pubBlockNumber}</div>
+            <div>
+              <Button onClick={()=>updatePuzzleList('UNSOLVED')}>UNSOLVED</Button>
+              <Button onClick={()=>updatePuzzleList('CHALLENGABLE')}>CHALLENGABLE</Button>
+              <Button onClick={()=>updatePuzzleList('SOLVED')}>SOLVED</Button>
+              <Button onClick={()=>updatePuzzleList('JUDGING')}>JUDGING</Button>
+              <Button onClick={()=>updatePuzzleList('INVALID')}>INVALID</Button>
+            </div>
             <Table>
               <Table.Body>
                 <Table.Row>
@@ -92,7 +46,7 @@ function Main (props) {
                   <Table.Cell>Challenge status</Table.Cell>
                   <Table.Cell>Challenge period remaining</Table.Cell>
                 </Table.Row>
-                {puzzleList.map(puzzleObj=><Table.Row key={puzzleObj.puzzleHash}>
+                {pubPuzzleList.map(puzzleObj=><Table.Row key={puzzleObj.puzzleHash}>
                   <Table.Cell>{puzzleObj.who}</Table.Cell>
                   <Table.Cell><ArweaveTitle puzzle_hash={puzzleObj.puzzleHash}/></Table.Cell>
                   <Table.Cell>

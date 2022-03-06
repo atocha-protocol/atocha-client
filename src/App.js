@@ -27,23 +27,11 @@ import PuzzleList from "./AtochaClient/PuzzleList";
 import StepCase from "./Step/StepCase";
 // import Upgrade from './Upgrade'
 
-// import {
-//   ApolloClient,
-//   InMemoryCache,
-//   ApolloProvider,
-//   useQuery,
-//   gql
-// } from "@apollo/client";
 import PuzzleDetail from "./AtochaClient/PuzzleDetail";
 import {AtoContextProvider} from "./AtochaClient/AtoContext";
 
 function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState()
-
-  // const apollo_client = new ApolloClient({
-  //   uri: config.SUBQUERY_HTTP,
-  //   cache: new InMemoryCache()
-  // });
 
   const loader = text => (
     <Dimmer active>
