@@ -63,47 +63,46 @@ const AtoContextProvider = props => {
                   {
                     dynPuzzleStatus:{
                       equalTo: "PUZZLE_STATUS_IS_FINAL"
-                    },
-                    dynChallengeStatus:{
-                      equalTo: "JudgePassed"
                     }
-                  },
-                 {
-                    or:[
-                      {
-                        dynChallengeStatus:{
-                          equalTo: "JudgeRejected"
-                        }
-                      },
-                      {
-                        dynChallengeStatus:{
-                          equalTo: "RaiseFundsBack"
-                        }
-                      }
-                    ]
                   },
                   {
                     dynChallengeStatus:{
+                      equalTo: "JudgeRejected"
+                    }
+                  },
+                  {
+                    dynChallengeStatus:{
+                      equalTo: "RaiseFundsBack"
+                    }
+                  },
+                  {
+                    dynPuzzleStatus:{
+                      equalTo: "PUZZLE_STATUS_IS_SOLVED"
+                    },
+                    dynRaiseDeadline: {
+                      equalTo: "0"
+                    },
+                    dynChallengeDeadline: {
+                      lessThan: "${pubBlockNumber}"
+                    }
+                  },
+                  {
+                    dynPuzzleStatus:{
+                      equalTo: "PUZZLE_STATUS_IS_SOLVED"
+                    },
+                    dynChallengeStatus: {
                       equalTo: "Raise"
                     },
                     dynRaiseDeadline: {
                       greaterThan: "0"
                     },
-                    and:[
+                    and: [
                       {
                         dynRaiseDeadline: {
-                          equalTo: "156500"
+                          lessThan: "${pubBlockNumber}"
                         }
                       }
                     ]
-                  },
-                  {
-                    dynRaiseDeadline: {
-                      equalTo: "0"
-                    },
-                    dynChallengeDeadline: {
-                      lessThan: "156500"
-                    }
                   }
                 ]
               }
