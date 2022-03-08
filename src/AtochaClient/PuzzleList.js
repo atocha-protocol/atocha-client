@@ -42,7 +42,9 @@ function Main (props) {
                   <Table.Cell>Puzzle Hash</Table.Cell>
                   <Table.Cell>Puzzle title</Table.Cell>
                   <Table.Cell>On chain bn</Table.Cell>
+                  <Table.Cell>Puzzle status</Table.Cell>
                   <Table.Cell>Answer status</Table.Cell>
+                  <Table.Cell>Challenge submission deadline</Table.Cell>
                   <Table.Cell>Challenge status</Table.Cell>
                   <Table.Cell>Challenge period remaining</Table.Cell>
                 </Table.Row>
@@ -54,11 +56,11 @@ function Main (props) {
                       {puzzleObj.eventBn}
                     </a>
                   </Table.Cell>
-                  <Table.Cell>{puzzleObj.ref_answer_infos.totalCount == 0?'No':puzzleObj.ref_answer_infos.nodes[0].resultType == 'ANSWER_HASH_IS_MATCH'?'Match':'Not match'}</Table.Cell>
-                  <Table.Cell>{puzzleObj.ref_answer_infos.totalCount == 0?'Not':
-                                  puzzleObj.ref_challenge_status.totalCount == 0?'No':
-                                      puzzleObj.ref_challenge_status.nodes[0].challengeStatus}</Table.Cell>
-                  <Table.Cell>*</Table.Cell>
+                  <Table.Cell>{puzzleObj.dynPuzzleStatus}</Table.Cell>
+                  <Table.Cell>{puzzleObj.dynHaveMatchedAnswer?'Match':'Not match'}</Table.Cell>
+                  <Table.Cell>{puzzleObj.dynChallengeDeadline>0?puzzleObj.dynChallengeDeadline:'*'}</Table.Cell>
+                  <Table.Cell>{puzzleObj.dynChallengeStatus}</Table.Cell>
+                  <Table.Cell>{puzzleObj.dynRaiseDeadline>0?puzzleObj.dynRaiseDeadline:'*'}</Table.Cell>
                 </Table.Row>)}
               </Table.Body>
             </Table>

@@ -156,6 +156,11 @@ const AtoContextProvider = props => {
                             createBn,
                             eventBn,
                             eventHash,
+                            dynRaiseDeadline,
+                            dynChallengeDeadline,
+                            dynPuzzleStatus,
+                            dynHaveMatchedAnswer,
+                            dynChallengeStatus,
                             ref_challenge_infos{
                                 totalCount
                             },
