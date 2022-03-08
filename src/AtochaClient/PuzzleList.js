@@ -39,7 +39,7 @@ function Main (props) {
             <Table>
               <Table.Body>
                 <Table.Row>
-                  <Table.Cell>Creator</Table.Cell>
+                  <Table.Cell>Puzzle Hash</Table.Cell>
                   <Table.Cell>Puzzle title</Table.Cell>
                   <Table.Cell>On chain bn</Table.Cell>
                   <Table.Cell>Answer status</Table.Cell>
@@ -47,7 +47,7 @@ function Main (props) {
                   <Table.Cell>Challenge period remaining</Table.Cell>
                 </Table.Row>
                 {pubPuzzleList.map(puzzleObj=><Table.Row key={puzzleObj.puzzleHash}>
-                  <Table.Cell>{puzzleObj.who}</Table.Cell>
+                  <Table.Cell>{puzzleObj.puzzleHash}</Table.Cell>
                   <Table.Cell><ArweaveTitle puzzle_hash={puzzleObj.puzzleHash}/></Table.Cell>
                   <Table.Cell>
                     <a href={`${config.POLKADOT_EXPLORE}/?rpc=ws%3A%2F%2F148.72.247.143%3A8844#/explorer/query/${puzzleObj.eventHash}`} target="_blank">

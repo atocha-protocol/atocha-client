@@ -63,6 +63,9 @@ const AtoContextProvider = props => {
                   {
                     dynPuzzleStatus:{
                       equalTo: "PUZZLE_STATUS_IS_FINAL"
+                    },
+                    dynChallengeStatus:{
+                      notEqualTo: "JudgePassed"
                     }
                   },
                   {
@@ -111,7 +114,7 @@ const AtoContextProvider = props => {
         const filter_INVALID = `
             filter: {
                 dynChallengeStatus:{
-                    equalTo:"JudgeRejected"
+                    equalTo:"JudgePassed"
                 }
             }
         `
