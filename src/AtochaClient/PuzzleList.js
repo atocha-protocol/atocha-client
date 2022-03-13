@@ -8,6 +8,7 @@ import ArweaveTitle from "./ArweaveTitle";
 
 import ClientAtochaCreator from "./ClientAtochaCreator";
 import {useAtoContext, useAtoContextState} from "./AtoContext";
+import PointsRankList from "./PointsRankList";
 
 function Main (props) {
   const {apollo_client, gql, puzzleSets: {pubPuzzleList, setPubPuzzleList, setPubPuzzleListType} , chainData: {pubBlockNumber} } = useAtoContext()
@@ -69,6 +70,11 @@ function Main (props) {
         <Grid.Row>
           <Grid.Column>
             <ClientAtochaCreator setNewPuzzle={setNewPuzzle} />
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column>
+            <PointsRankList />
           </Grid.Column>
         </Grid.Row>
       </div>

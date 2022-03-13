@@ -31,7 +31,7 @@ function Main (props) {
             }
           }){
             nodes{
-              who,
+              whoId,
               eventBn,
               deposit,
               depositType
@@ -65,7 +65,7 @@ function Main (props) {
             <Table.Cell>Type</Table.Cell>
           </Table.Row>
           {challengeDepositList.map((challengeData, idx)=><Table.Row key={idx}>
-            <Table.Cell>{challengeData.who}</Table.Cell>
+            <Table.Cell>{challengeData.whoId}</Table.Cell>
             <Table.Cell>{challengeData.eventBn}</Table.Cell>
             <Table.Cell>{challengeData.deposit}</Table.Cell>
             <Table.Cell>{challengeData.depositType}</Table.Cell>

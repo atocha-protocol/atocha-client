@@ -20,6 +20,7 @@ const AtoContextProvider = props => {
     const [pubPuzzleList, setPubPuzzleList] = useState([])
     const [pubPuzzleListType, setPubPuzzleListType] = useState('UNSOLVED')
     const [pubBlockNumber, setPubBlockNumber] = useState(0)
+    const [rewardRankList, setRewardRankList] = useState([])
 
     const apollo_client = new ApolloClient({
         uri: config.SUBQUERY_HTTP,
@@ -151,7 +152,7 @@ const AtoContextProvider = props => {
                 query{
                     puzzleCreatedEvents(last:1000,orderBy:EVENT_BN_DESC, ${filter_result}){
                         nodes{
-                            who,
+                            whoId,
                             puzzleHash,
                             createBn,
                             eventBn,
@@ -186,6 +187,7 @@ const AtoContextProvider = props => {
             setPubPuzzleList(result.data.puzzleCreatedEvents.nodes)
         });
     }
+
 
     useEffect(() => {
         if (apiState === 'READY' ) {

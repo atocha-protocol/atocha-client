@@ -116,7 +116,9 @@ const loadAccounts = (state, dispatch) => {
         systemChainType.isLocal ||
         isTestChain(systemChain)
 
+
       Keyring.loadAll({ isDevelopment }, allAccounts)
+      Keyring.setSS58Format(50)
 
       dispatch({ type: 'SET_KEYRING', payload: Keyring })
     } catch (e) {

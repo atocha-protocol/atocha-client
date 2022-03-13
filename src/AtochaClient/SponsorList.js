@@ -30,7 +30,7 @@ function Main (props) {
           },orderBy: DEPOSIT_DESC){
             nodes{
               id,
-              who,
+              whoId,
               eventBn,
               deposit,
               puzzleInfo{
@@ -66,7 +66,7 @@ function Main (props) {
             <Table.Cell>Reason</Table.Cell>
           </Table.Row>
           {puzzleDepositList.map((sponsorDepositData, idx)=><Table.Row key={idx}>
-            <Table.Cell>{sponsorDepositData.who}</Table.Cell>
+            <Table.Cell>{sponsorDepositData.whoId}</Table.Cell>
             <Table.Cell>{sponsorDepositData.eventBn}</Table.Cell>
             <Table.Cell>{sponsorDepositData.deposit}</Table.Cell>
             <Table.Cell>{sponsorDepositData.tip}</Table.Cell>

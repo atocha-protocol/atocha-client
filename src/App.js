@@ -29,6 +29,8 @@ import StepCase from "./Step/StepCase";
 
 import PuzzleDetail from "./AtochaClient/PuzzleDetail";
 import {AtoContextProvider} from "./AtochaClient/AtoContext";
+import PointsRankList from "./AtochaClient/PointsRankList";
+import UserHome from "./AtochaClient/UserHome";
 
 function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState()
@@ -82,10 +84,13 @@ function Main() {
               <div className="App">
                 <h3><Link to="/">Home</Link></h3>
                 <h3><Link to="/puzzle_list">Atocha Puzzle Client</Link></h3>
+                <h3><Link to="/user_home">Atocha user home</Link></h3>
                 <h3><Link to="/step_case">StepCase</Link></h3>
                 <Routes>
                   <Route path="/puzzle_list" element={<PuzzleList />} />
+                  <Route path="/points_rank_list" element={<PointsRankList />} />
                   <Route path="/step_case" element={<StepCase />} />
+                  <Route path="/user_home" element={<UserHome />} />
                   <Route path="/puzzle_detail/:puzzle_hash" element={<PuzzleDetail />} />
                 </Routes>
               </div>
