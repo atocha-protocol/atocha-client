@@ -43,6 +43,7 @@ function Main (props) {
                   <Table.Cell>Puzzle Hash</Table.Cell>
                   <Table.Cell>Puzzle title</Table.Cell>
                   <Table.Cell>On chain bn</Table.Cell>
+                  <Table.Cell>Total Deposit</Table.Cell>
                   <Table.Cell>Puzzle status</Table.Cell>
                   <Table.Cell>Answer status</Table.Cell>
                   <Table.Cell>Challenge submission deadline</Table.Cell>
@@ -57,6 +58,7 @@ function Main (props) {
                       {puzzleObj.eventBn}
                     </a>
                   </Table.Cell>
+                  <Table.Cell>{puzzleObj.dynTotalDeposit}</Table.Cell>
                   <Table.Cell>{puzzleObj.dynPuzzleStatus}</Table.Cell>
                   <Table.Cell>{puzzleObj.dynHaveMatchedAnswer?'Match':'Not match'}</Table.Cell>
                   <Table.Cell>{puzzleObj.dynChallengeDeadline>0?puzzleObj.dynChallengeDeadline:'*'}</Table.Cell>

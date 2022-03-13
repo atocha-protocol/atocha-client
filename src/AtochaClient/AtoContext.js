@@ -162,6 +162,7 @@ const AtoContextProvider = props => {
                             dynPuzzleStatus,
                             dynHaveMatchedAnswer,
                             dynChallengeStatus,
+                            dynTotalDeposit,
                             ref_challenge_infos{
                                 totalCount
                             },
