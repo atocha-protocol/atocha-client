@@ -121,11 +121,15 @@ function Main (props) {
       console.log('Send data to arweave.');
       axios.post(config.ARWEAVE_HTTP, storageJson).then(response => {
         console.log('Request data: ', response.data);
-        const puzzle_hash = response.data.puzzle_hash;
-        const answer_hash = MakeAnswerSha256WithSimple(puzzleAnswer, response.data.puzzle_hash);
-        setPuzzleHash(puzzle_hash);
-        setAnswerHash(answer_hash);
-        handleSubmitPuzzle(puzzle_hash, answer_hash);
+        if (response.data.result == 'ok') {
+          const puzzle_hash = response.data.result_id;
+          const answer_hash = MakeAnswerSha256WithSimple(puzzleAnswer, response.data.result_id);
+          setPuzzleHash(puzzle_hash);
+          setAnswerHash(answer_hash);
+          handleSubmitPuzzle(puzzle_hash, answer_hash);
+        }else{
+          console.log('Ar storage error : ', response);
+        }
       }, err => {
         console.log('Request err:', err);
       }).catch((err) => {
