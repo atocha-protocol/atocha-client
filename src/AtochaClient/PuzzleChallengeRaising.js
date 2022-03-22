@@ -3,10 +3,13 @@ import { Form, Input, Grid, Card, Statistic, TextArea, Label } from 'semantic-ui
 
 import {useSubstrate, useSubstrateState} from '../substrate-lib';
 import { TxButton } from '../substrate-lib/components';
+import {useAtoContext} from "./AtoContext";
 
 function Main (props) {
   const { api } = useSubstrateState();
-  const { puzzle_hash, apollo_client, gql } = props;
+  const { puzzle_hash, challengeDepositList} = props;
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck} } = useAtoContext();
+
 
   // Puzzle information.
   const [deposit, setDeposit] = useState(0);
@@ -22,13 +25,19 @@ function Main (props) {
   }
 
   function statusChange (newStatus) {
-    console.log(newStatus)
-    if (newStatus.isInBlock) {
-      console.log("Is InBlock")
-      setStatus("Extrinsic success.")
-    } else {
-      console.log("Not InBlock")
-      setStatus("Extrinsic failed.")
+    if (newStatus.isFinalized) {
+      const query_str = `
+         query{
+          challengeDepositEvents(filter: {
+            puzzleHash:{
+              equalTo: "${puzzle_hash}"
+            }
+          }){
+            totalCount
+          }
+        } `;
+      tryToPollCheck(query_str, updatePubRefresh, ()=>{}, challengeDepositList.length);
+    }else{
     }
   }
 
@@ -68,8 +77,9 @@ function Main (props) {
 
 export default function PuzzleChallengeRaising (props) {
   const { api } = useSubstrateState();
-  const { puzzle_hash, apollo_client, gql } = props;
-  return api.query && puzzle_hash && apollo_client && gql
+  const { puzzle_hash, challengeDepositList} = props;
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck} } = useAtoContext();
+  return api.query && puzzle_hash && apollo_client && gql && challengeDepositList
       ? <Main {...props} />
       : null;
 }

@@ -9,8 +9,8 @@ import {useAtoContext} from "./AtoContext";
 
 function Main (props) {
   const { api } = useSubstrateState();
-  const { puzzle_hash } = props;
-  const { apollo_client, gql } = useAtoContext()
+  const { puzzle_hash, answerList } = props;
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck} } = useAtoContext()
 
   // Puzzle information.
   const [answerTxt, setAnswerTxt] = useState('');
@@ -22,6 +22,17 @@ function Main (props) {
 
   function statusChange (newStatus) {
     if (newStatus.isFinalized) {
+      const query_str = `
+         query{
+          answerCreatedEvents(filter: {
+            puzzleHash:{
+              equalTo: "${puzzle_hash}"
+            }
+          }){
+            totalCount
+          }
+        } `;
+      tryToPollCheck(query_str, updatePubRefresh, ()=>{}, answerList.length);
     }else{
     }
   }
@@ -60,7 +71,6 @@ function Main (props) {
           />
         </Form.Field>
         <div style={{ overflowWrap: 'break-word' }}>{status}</div>
-        {/*<AnswerList puzzle_hash={puzzle_hash} apollo_client={apollo_client} gql={gql} />*/}
       </Form>
     </Grid.Column>
   );

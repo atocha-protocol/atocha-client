@@ -8,13 +8,15 @@ import config from "../config";
 import PuzzleAnswer from "./PuzzleAnswer";
 import PuzzleCommitChallenge from "./PuzzleCommitChallenge";
 import PuzzleCommitSponsorship from "./PuzzleCommitSponsorship";
+import {useAtoContext} from "./AtoContext";
 
 function Main (props) {
   const { api } = useSubstrateState();
-  const { puzzle_hash, apollo_client, gql } = props;
+  const { puzzle_hash } = props;
 
   // Puzzle information.
   const [puzzleDepositList, setPuzzleDepositList] = useState([]);
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck} } = useAtoContext()
 
   async function loadChallengeDepositList() {
     if (!puzzle_hash){
@@ -50,12 +52,12 @@ function Main (props) {
 
   useEffect(() => {
     loadChallengeDepositList();
-  }, []);
+  }, [pubRefresh]);
 
 
   return (
     <Grid.Column width={8}>
-      <PuzzleCommitSponsorship puzzle_hash={puzzle_hash} apollo_client={apollo_client} gql={gql} />
+      <PuzzleCommitSponsorship puzzle_hash={puzzle_hash} puzzleDepositList={puzzleDepositList} />
       <h3>Sponsor deposit info</h3>
       <Table>
         <Table.Body>
@@ -79,7 +81,8 @@ function Main (props) {
 
 export default function SponsorList (props) {
   const { api } = useSubstrateState();
-  const { puzzle_hash, apollo_client, gql } = props;
+  const { puzzle_hash } = props;
+  const { apollo_client, gql } = useAtoContext()
   return api.query && puzzle_hash && apollo_client && gql
     ? <Main {...props} />
     : null;

@@ -7,14 +7,14 @@ import {useAtoContext} from "./AtoContext";
 
 function Main (props) {
   const { api } = useSubstrateState();
-  const { puzzle_hash } = props;
-  const { apollo_client, gql } = useAtoContext()
+  const { puzzle_hash, puzzleDepositList } = props;
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck} } = useAtoContext()
 
   // Puzzle information.
   const [deposit, setDeposit] = useState(0);
   const [status, setStatus] = useState(null);
   const [sponsorshipExplain, setSponsorshipExplain] = useState(null);
-  // const [puzzleHash, setPuzzleHash] = useState('');
+
   useEffect(() => {
 
   }, [api.query.atochaModule]);
@@ -29,6 +29,19 @@ function Main (props) {
     if (newStatus.isInBlock) {
       console.log("Is InBlock")
       setStatus("Extrinsic success.")
+    } else if (newStatus.isFinalized) {
+      setStatus("isFinalized.")
+      const query_str = `
+         query{
+          puzzleDepositEvents(filter: {
+            puzzleInfoId:{
+              equalTo: "${puzzle_hash}"
+            }
+          }){
+            totalCount
+          }
+        } `;
+      tryToPollCheck(query_str, updatePubRefresh, ()=>{}, puzzleDepositList.length);
     } else {
       console.log("Not InBlock")
       setStatus("Extrinsic failed.")
@@ -78,7 +91,8 @@ function Main (props) {
 
 export default function PuzzleCommitSponsorship (props) {
   const { api } = useSubstrateState();
-  const { puzzle_hash, apollo_client, gql } = props;
+  const { puzzle_hash } = props;
+  const {apollo_client, gql } = useAtoContext()
   return api.query && puzzle_hash && apollo_client && gql
       ? <Main {...props} />
       : null;

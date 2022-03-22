@@ -11,7 +11,7 @@ import {useAtoContext, useAtoContextState} from "./AtoContext";
 import PointsRankList from "./PointsRankList";
 
 function Main (props) {
-  const {apollo_client, gql, puzzleSets: {pubPuzzleList, setPubPuzzleList, setPubPuzzleListType} , chainData: {pubBlockNumber} } = useAtoContext()
+  const {apollo_client, gql, puzzleSets: {pubPuzzleList, setPubPuzzleList, setPubPuzzleListType, pubRefresh, updatePubRefresh} , chainData: {pubBlockNumber} } = useAtoContext()
   const { api } = useSubstrateState();
   const [newPuzzle, setNewPuzzle] = useState(null);
 
@@ -28,7 +28,7 @@ function Main (props) {
       <div>
         <Grid.Row>
           <Grid.Column width={8}>
-            <h1>Atocha puzzle list </h1>
+            <h1>Atocha puzzle list</h1>
             <div>Current block number: {pubBlockNumber}</div>
             <div>
               <Button onClick={()=>updatePuzzleList('UNSOLVED')}>UNSOLVED</Button>
@@ -54,7 +54,7 @@ function Main (props) {
                   <Table.Cell>{puzzleObj.puzzleHash}</Table.Cell>
                   <Table.Cell><ArweaveTitle puzzle_hash={puzzleObj.puzzleHash}/></Table.Cell>
                   <Table.Cell>
-                    <a href={`${config.POLKADOT_EXPLORE}/?rpc=ws%3A%2F%2F148.72.247.143%3A8844#/explorer/query/${puzzleObj.eventHash}`} target="_blank">
+                    <a href={`${config.POLKADOT_EXPLORE}/?rpc=${config.PROVIDER_SOCKET}#/explorer/query/${puzzleObj.eventHash}`} target="_blank">
                       {puzzleObj.eventBn}
                     </a>
                   </Table.Cell>

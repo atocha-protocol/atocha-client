@@ -25,7 +25,7 @@ function Main (props) {
   let eventTimer = 0;
   const {setNewPuzzle} = props;
   const { api, currentAccount } = useSubstrateState();
-  const { apollo_client, gql } = useAtoContext()
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck} , chainData: {pubBlockNumber} } = useAtoContext()
 
   const getFromAcct = async () => {
     const {
@@ -43,39 +43,6 @@ function Main (props) {
     return fromAcct;
   };
 
-  // const apollo_client = new ApolloClient({
-  //   uri: config.SUBQUERY_HTTP,
-  //   cache: new InMemoryCache()
-  // });
-
-  async function loadPuzzleCreateEventStatus(puzzle_hash) {
-    if (puzzle_hash === undefined || puzzle_hash === "") {
-      setPuzzleStatus(0);
-      return;
-    }
-    const query_str = `
-      query{
-          puzzleCreatedEvents(filter:{
-            puzzleHash: {equalTo: "${puzzle_hash}"}
-          }){
-            totalCount
-          }
-        }
-    `;
-    apollo_client.query({
-      query: gql(query_str),
-      fetchPolicy: 'no-cache'
-    }).then(result => {
-      console.log("result.data. = ", eventTimer, result.data.puzzleCreatedEvents.totalCount);
-      if (result.data.puzzleCreatedEvents.totalCount > 0 && eventTimer) {
-        console.log("loadPuzzleCreateEventStatus C ---");
-        clearInterval(eventTimer);
-        setNewPuzzle(puzzle_hash)
-      }
-      setPuzzleStatus(result.data.puzzleCreatedEvents.totalCount);
-    });
-  }
-
   // Puzzle information.
   const [answerHash, setAnswerHash] = useState('');
   const [status, setStatus] = useState(null);
@@ -91,7 +58,7 @@ function Main (props) {
   const [puzzleTextContent, setPuzzleTextContent] = useState({});
   const [deposit, setDeposit] = useState(0);
   const [puzzleStatus, setPuzzleStatus] = useState(0);
-  const [puzzleStatusInterval, setPuzzleStatusInterval] =  useState(null);
+  // const [puzzleStatusInterval, setPuzzleStatusInterval] =  useState(null);
 
   useEffect(() => {
     const storageJson = {
@@ -159,20 +126,20 @@ function Main (props) {
         } else if (result.status.isFinalized) {
           setStatus(`submit status: ${result.status} - ${result.status.asFinalized}`);
           unsub();
-          tryToUpdatePuzzleStatus(puzzle_hash);
+          const query_str = `
+            query{
+                puzzleCreatedEvents(filter:{
+                  puzzleHash: {equalTo: "${puzzle_hash}"}
+                }){
+                  totalCount
+                }
+              }
+          `;
+          tryToPollCheck(query_str, updatePubRefresh, ()=>{});
         }
       });
   }
 
-  function tryToUpdatePuzzleStatus(puzzle_hash) {
-    if(puzzle_hash=="") {
-      alert("Puzzle or Answer hash not be empty!");
-      return;
-    }
-    eventTimer = setInterval(()=>{
-      loadPuzzleCreateEventStatus(puzzle_hash);
-    }, 2000);
-  }
 
   function countDeposit (num) {
     const decimals = api.registry.chainDecimals;

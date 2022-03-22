@@ -62,7 +62,7 @@ function Main (props) {
           <Grid.Row>
               <h2>>> Sponsor it</h2>
               <div>.</div>
-              <SponsorList puzzle_hash={puzzle_hash} apollo_client={apollo_client} gql={gql}  />
+              <SponsorList puzzle_hash={puzzle_hash} />
           </Grid.Row>
           <Grid.Row>
               <hr/>

@@ -21,11 +21,57 @@ const AtoContextProvider = props => {
     const [pubPuzzleListType, setPubPuzzleListType] = useState('UNSOLVED')
     const [pubBlockNumber, setPubBlockNumber] = useState(0)
     const [rewardRankList, setRewardRankList] = useState([])
+    const [pubRefresh, setPubRefresh] = useState(0)
 
     const apollo_client = new ApolloClient({
         uri: config.SUBQUERY_HTTP,
         cache: new InMemoryCache()
     });
+
+    function updatePubRefresh() {
+        setPubRefresh(pubRefresh+1)
+    }
+
+    // successful call, failed call
+    function tryToPollCheck(totalListenQueryStr, successfulCall, failedCall, threshold =0, maxRetry=10) {
+
+        let tmpTimer = 0;
+        let tmpRetry = maxRetry;
+        let cleanAndUpdateRefreshCall = (isSuccessful) => {
+            clearInterval(tmpTimer);
+            if(isSuccessful){
+                successfulCall();
+            }else{
+                failedCall();
+            }
+        };
+        let pollCheck = () => {
+            tmpRetry--;
+            if(tmpRetry<=0){
+                cleanAndUpdateRefreshCall(false);
+            }
+            apollo_client.query({
+                query: gql(totalListenQueryStr),
+                fetchPolicy: 'no-cache'
+            }).then(result => {
+                for (var key in result.data) {
+                    console.log("key=",key);     //获取key值
+                    if(result.data[key]['totalCount'] == undefined || result.data[key]['totalCount'] == null){
+                        console.log("failed call result.data[key] = ", result.data[key]);
+                        cleanAndUpdateRefreshCall(false);
+                    }else{
+                        console.log("result.data = ", tmpRetry, result.data[key]['totalCount']);
+                        if (result.data[key]['totalCount'] > threshold && tmpTimer) {
+                            cleanAndUpdateRefreshCall(true);
+                        }
+                    }
+                }
+            });
+        }
+        tmpTimer = setInterval(()=>{
+            pollCheck();
+        }, 3000);
+    }
 
     async function loadPuzlleList() {
         console.log('pubPuzzleListType = ', pubPuzzleListType);
@@ -201,13 +247,13 @@ const AtoContextProvider = props => {
 
             loadPuzlleList();
         }
-    }, [apiState, pubPuzzleListType])
+    }, [apiState, pubPuzzleListType, pubRefresh])
 
     return (
         <>
             <AtoContext.Provider value={{ helloWorld, apollo_client, gql,
                 chainData: {pubBlockNumber},
-                puzzleSets: {pubPuzzleList, setPubPuzzleList, setPubPuzzleListType}
+                puzzleSets: {pubPuzzleList, setPubPuzzleList, setPubPuzzleListType, pubRefresh, updatePubRefresh, tryToPollCheck}
             }}>
                 {props.children}
             </AtoContext.Provider>

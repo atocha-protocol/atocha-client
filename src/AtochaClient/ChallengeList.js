@@ -13,7 +13,7 @@ import PuzzleChallengeRaising from "./PuzzleChallengeRaising";
 function Main (props) {
   const { api } = useSubstrateState();
   const { puzzle_hash } = props;
-  const { apollo_client, gql } = useAtoContext()
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck} } = useAtoContext()
 
   // Puzzle information.
   const [challengeDepositList, setChallengeDepositList] = useState([]);
@@ -48,13 +48,13 @@ function Main (props) {
 
   useEffect(() => {
     loadChallengeDepositList();
-  }, [setChallengeDepositList]);
+  }, [setChallengeDepositList, pubRefresh]);
 
 
   return (
     <Grid.Column width={8}>
-      <PuzzleCommitChallenge puzzle_hash={puzzle_hash} apollo_client={apollo_client} gql={gql} />
-      <PuzzleChallengeRaising puzzle_hash={puzzle_hash} apollo_client={apollo_client} gql={gql} />
+      <PuzzleCommitChallenge puzzle_hash={puzzle_hash} challengeDepositList={challengeDepositList} />
+      <PuzzleChallengeRaising puzzle_hash={puzzle_hash} challengeDepositList={challengeDepositList} />
       <h3>Challenge deposit info</h3>
       <Table>
         <Table.Body>
@@ -79,8 +79,8 @@ function Main (props) {
 export default function ChallengeList (props) {
   const { api } = useSubstrateState();
   const { puzzle_hash } = props;
-  const { apollo_client, gql } = useAtoContext()
-  return api.query && puzzle_hash && apollo_client && gql
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck} } = useAtoContext()
+  return api.query && puzzle_hash && apollo_client && gql && pubRefresh
     ? <Main {...props} />
     : null;
 }
