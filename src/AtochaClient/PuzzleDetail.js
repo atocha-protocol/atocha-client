@@ -54,7 +54,7 @@ function Main (props) {
           <Grid.Row>
               <h2>>> Solve it</h2>
               <div>Be the first one to submit a matched answer...</div>
-              <AnswerList puzzle_hash={puzzle_hash} apollo_client={apollo_client} gql={gql}  />
+              <AnswerList puzzle_hash={puzzle_hash} />
           </Grid.Row>
           <Grid.Row>
               <hr/>
@@ -70,7 +70,7 @@ function Main (props) {
           <Grid.Row>
               <h2>>> Challenge it</h2>
               <div>if you think the matched answer is not appropriate.</div>
-              <ChallengeList puzzle_hash={puzzle_hash} apollo_client={apollo_client} gql={gql}  />
+              <ChallengeList puzzle_hash={puzzle_hash} />
           </Grid.Row>
       </div>
   );
