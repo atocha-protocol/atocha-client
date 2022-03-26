@@ -19,7 +19,7 @@ import {useAtoContext} from "./AtoContext";
 import {useSubstrateState} from "../substrate-lib";
 
 function Main (props) {
-    const { apollo_client, gql } = useAtoContext()
+    const {apollo_client, gql, puzzleSets: {pubRefresh} } = useAtoContext()
     let {puzzle_hash} = useParams();
     let request = `${config.ARWEAVE_EXPLORE}/${puzzle_hash}`;
     let [puzzleInfo, setPuzzleInfo] = useState(null);
@@ -44,7 +44,7 @@ function Main (props) {
   return (
       <div>
           <Grid.Row>
-              <h2>Title: [{puzzleInfo?puzzleInfo.puzzle_title:'*'}]</h2>
+              <h2>Title: [{puzzleInfo?puzzleInfo.puzzle_title:'*'}][{pubRefresh}]</h2>
               {puzzleInfo?puzzleInfo.puzzle_content.map((body, idx) => <div key={idx}>
                   {body.type?body.type === 'text'?
                       <h3>TextContent:[{body.data}]</h3>:body.type === 'file'?

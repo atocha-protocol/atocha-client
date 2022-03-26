@@ -33,12 +33,13 @@ function Main (props) {
   }, [setPuzzleInfo]);
 
   return (
-      <Link to={`/puzzle_detail/${puzzle_hash}`}>{puzzleInfo?puzzleInfo.puzzle_title:'*'}</Link>
+      <Link to={`/puzzle_detail/${puzzle_hash}`}>{puzzleInfo?puzzleInfo.puzzle_title:puzzle_hash}</Link>
   );
 }
 
 export default function ArweaveTitle (props) {
-  return true
+  const { puzzle_hash } = props;
+  return puzzle_hash
     ? <Main {...props} />
     : null;
 }

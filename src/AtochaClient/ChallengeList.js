@@ -9,6 +9,7 @@ import PuzzleAnswer from "./PuzzleAnswer";
 import PuzzleCommitChallenge from "./PuzzleCommitChallenge";
 import {useAtoContext} from "./AtoContext";
 import PuzzleChallengeRaising from "./PuzzleChallengeRaising";
+import UserHomeLink from "./UserHomeLink";
 
 function Main (props) {
   const { api } = useSubstrateState();
@@ -65,7 +66,7 @@ function Main (props) {
             <Table.Cell>Type</Table.Cell>
           </Table.Row>
           {challengeDepositList.map((challengeData, idx)=><Table.Row key={idx}>
-            <Table.Cell>{challengeData.whoId}</Table.Cell>
+            <Table.Cell><UserHomeLink user_address={challengeData.whoId} /></Table.Cell>
             <Table.Cell>{challengeData.eventBn}</Table.Cell>
             <Table.Cell>{challengeData.deposit}</Table.Cell>
             <Table.Cell>{challengeData.depositType}</Table.Cell>

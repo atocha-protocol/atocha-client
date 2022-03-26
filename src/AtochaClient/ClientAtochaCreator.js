@@ -11,19 +11,7 @@ import MakeAnswerSha256WithSimple from '../units/MakeAnswerSha256';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import {useAtoContext} from "./AtoContext";
 
-// import {
-//   ApolloClient,
-//   InMemoryCache,
-//   ApolloProvider,
-//   useQuery,
-//   useApolloClient,
-//   gql
-// } from "@apollo/client";
-// import {useAtoContext} from "./AtoContext";
-
 function Main (props) {
-  let eventTimer = 0;
-  const {setNewPuzzle} = props;
   const { api, currentAccount } = useSubstrateState();
   const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck} , chainData: {pubBlockNumber} } = useAtoContext()
 

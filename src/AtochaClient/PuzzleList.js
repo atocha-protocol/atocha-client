@@ -9,6 +9,7 @@ import ArweaveTitle from "./ArweaveTitle";
 import ClientAtochaCreator from "./ClientAtochaCreator";
 import {useAtoContext, useAtoContextState} from "./AtoContext";
 import PointsRankList from "./PointsRankList";
+import UserHomeLink from "./UserHomeLink";
 
 function Main (props) {
   const {apollo_client, gql, puzzleSets: {pubPuzzleList, setPubPuzzleList, setPubPuzzleListType, pubRefresh, updatePubRefresh} , chainData: {pubBlockNumber} } = useAtoContext()
@@ -28,7 +29,8 @@ function Main (props) {
       <div>
         <Grid.Row>
           <Grid.Column width={8}>
-            <h1>Atocha puzzle list</h1>
+            <h1>Atocha Puzzles v0.2</h1>
+            <h3>Create or solve puzzles, win prizes, have fun...</h3>
             <div>Current block number: {pubBlockNumber}</div>
             <div>
               <Button onClick={()=>updatePuzzleList('UNSOLVED')}>UNSOLVED</Button>
@@ -40,8 +42,8 @@ function Main (props) {
             <Table>
               <Table.Body>
                 <Table.Row>
-                  <Table.Cell>Puzzle Hash</Table.Cell>
                   <Table.Cell>Puzzle title</Table.Cell>
+                  <Table.Cell>Creator</Table.Cell>
                   <Table.Cell>On chain bn</Table.Cell>
                   <Table.Cell>Total Deposit</Table.Cell>
                   <Table.Cell>Puzzle status</Table.Cell>
@@ -51,8 +53,8 @@ function Main (props) {
                   <Table.Cell>Challenge period remaining</Table.Cell>
                 </Table.Row>
                 {pubPuzzleList.map(puzzleObj=><Table.Row key={puzzleObj.puzzleHash}>
-                  <Table.Cell>{puzzleObj.puzzleHash}</Table.Cell>
                   <Table.Cell><ArweaveTitle puzzle_hash={puzzleObj.puzzleHash}/></Table.Cell>
+                  <Table.Cell><UserHomeLink user_address={puzzleObj.whoId} /></Table.Cell>
                   <Table.Cell>
                     <a href={`${config.POLKADOT_EXPLORE}/?rpc=${config.PROVIDER_SOCKET}#/explorer/query/${puzzleObj.eventHash}`} target="_blank">
                       {puzzleObj.eventBn}
@@ -69,16 +71,16 @@ function Main (props) {
             </Table>
           </Grid.Column>
         </Grid.Row>
-        <Grid.Row>
-          <Grid.Column>
-            <ClientAtochaCreator setNewPuzzle={setNewPuzzle} />
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Column>
-            <PointsRankList />
-          </Grid.Column>
-        </Grid.Row>
+        {/*<Grid.Row>*/}
+        {/*  <Grid.Column>*/}
+        {/*    <ClientAtochaCreator setNewPuzzle={setNewPuzzle} />*/}
+        {/*  </Grid.Column>*/}
+        {/*</Grid.Row>*/}
+        {/*<Grid.Row>*/}
+        {/*  <Grid.Column>*/}
+        {/*    <PointsRankList />*/}
+        {/*  </Grid.Column>*/}
+        {/*</Grid.Row>*/}
       </div>
   );
 }

@@ -14,7 +14,7 @@ import {useSubstrateState} from "../substrate-lib";
 const AtoContext = createContext(null)
 
 const AtoContextProvider = props => {
-    const { apiState, apiError, keyringState, api } = useSubstrateState()
+    const { apiState, apiError, keyringState, api, currentAccount} = useSubstrateState()
 
     const [helloWorld, setHelloWorld] = useState('None--')
     const [pubPuzzleList, setPubPuzzleList] = useState([])
@@ -22,6 +22,7 @@ const AtoContextProvider = props => {
     const [pubBlockNumber, setPubBlockNumber] = useState(0)
     const [rewardRankList, setRewardRankList] = useState([])
     const [pubRefresh, setPubRefresh] = useState(0)
+    const [userPoints, setUserPoints] = useState(null);
 
     const apollo_client = new ApolloClient({
         uri: config.SUBQUERY_HTTP,
@@ -71,6 +72,15 @@ const AtoContextProvider = props => {
         tmpTimer = setInterval(()=>{
             pollCheck();
         }, 3000);
+    }
+
+    function loadAccountPoints() {
+        currentAccount &&
+        api.query.atochaFinace
+          .atoPointLedger(currentAccount.address, points =>{
+              setUserPoints(points.toHuman())
+          }) .then(unsub => {
+        }) .catch(console.error)
     }
 
     async function loadPuzlleList() {
@@ -246,13 +256,14 @@ const AtoContextProvider = props => {
             }).catch(console.error)
 
             loadPuzlleList();
+            loadAccountPoints();
         }
-    }, [apiState, pubPuzzleListType, pubRefresh])
+    }, [apiState, currentAccount, pubPuzzleListType, pubRefresh])
 
     return (
         <>
             <AtoContext.Provider value={{ helloWorld, apollo_client, gql,
-                chainData: {pubBlockNumber},
+                chainData: {pubBlockNumber, userPoints},
                 puzzleSets: {pubPuzzleList, setPubPuzzleList, setPubPuzzleListType, pubRefresh, updatePubRefresh, tryToPollCheck}
             }}>
                 {props.children}

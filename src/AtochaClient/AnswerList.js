@@ -7,6 +7,7 @@ import ArweaveTitle from "./ArweaveTitle";
 import config from "../config";
 import PuzzleAnswer from "./PuzzleAnswer";
 import {useAtoContext} from "./AtoContext";
+import UserHomeLink from "./UserHomeLink";
 
 function Main (props) {
   const { api } = useSubstrateState();
@@ -17,6 +18,7 @@ function Main (props) {
   const [answerList, setAnswerList] = useState([]);
 
   async function loadAnswerList() {
+    console.log("Double run answer-list.");
     if (!puzzle_hash){
       return;
     }
@@ -30,6 +32,7 @@ function Main (props) {
           }){
             nodes{
               id,
+              whoId,
               answerContent,
               eventBn,
               resultType
@@ -45,8 +48,9 @@ function Main (props) {
 
 
   useEffect(() => {
+
     loadAnswerList();
-  }, [setAnswerList, pubRefresh]);
+  }, [pubRefresh]);
 
   return (
     <Grid.Column width={8}>
@@ -55,11 +59,13 @@ function Main (props) {
       <Table>
         <Table.Body>
           <Table.Row>
+            <Table.Cell>Creator</Table.Cell>
             <Table.Cell>Answer</Table.Cell>
             <Table.Cell>Event bn</Table.Cell>
             <Table.Cell>Match result</Table.Cell>
           </Table.Row>
           {answerList.map((answerData, idx)=><Table.Row key={idx}>
+            <Table.Cell><UserHomeLink user_address={answerData.whoId} /></Table.Cell>
             <Table.Cell>{answerData.answerContent}</Table.Cell>
             <Table.Cell>{answerData.eventBn}</Table.Cell>
             <Table.Cell>{answerData.resultType}</Table.Cell>
