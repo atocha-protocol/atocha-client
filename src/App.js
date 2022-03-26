@@ -117,8 +117,9 @@ function Main() {
           {/*  <BlockNumber />*/}
           {/*  <BlockNumber finalized />*/}
           {/*</Grid.Row>*/}
+          <BrowserRouter>
           <Grid.Row stretched>
-            <BrowserRouter>
+
               <div className="ui secondary menu">
                 <Link className={menuItemCss.itemHome} to="/" onClick={()=>{menuClick("home")}}>Home(v333)</Link>
                 <Link className={menuItemCss.itemRanklist} to="/points_rank_list" onClick={()=>{menuClick("ranklist")}}>Points rank list</Link>
@@ -126,17 +127,19 @@ function Main() {
                 <Link className={menuItemCss.itemStep} to="/step_case" onClick={()=>{menuClick("step")}}>StepCase [old - tools]</Link>
                 <Link className={menuItemCss.itemUser} to="/my_home" onClick={()=>{menuClick("user")}}>My</Link>
               </div>
-                <Routes>
-                  <Route path="/" element={<PuzzleList />} />
-                  <Route path="/create" element={<ClientAtochaCreator />} />
-                  <Route path="/points_rank_list" element={<PointsRankList />} />
-                  <Route path="/step_case" element={<StepCase />} />
-                  <Route path="/my_home" element={<MyHome />} />
-                  <Route path="/user_home/:account_id" element={<UserHome />} />
-                  <Route path="/puzzle_detail/:puzzle_hash" element={<PuzzleDetail />} />
-                </Routes>
-            </BrowserRouter>
           </Grid.Row>
+            <Grid.Row>
+              <Routes>
+                <Route path="/" element={<PuzzleList />} />
+                <Route path="/create" element={<ClientAtochaCreator />} />
+                <Route path="/points_rank_list" element={<PointsRankList />} />
+                <Route path="/step_case" element={<StepCase />} />
+                <Route path="/my_home" element={<MyHome />} />
+                <Route path="/user_home/:account_id" element={<UserHome />} />
+                <Route path="/puzzle_detail/:puzzle_hash" element={<PuzzleDetail />} />
+              </Routes>
+            </Grid.Row>
+          </BrowserRouter>
           {/*<Grid.Row stretched>*/}
           {/*  <Balances />*/}
           {/*</Grid.Row>*/}
