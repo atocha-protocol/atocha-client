@@ -80,8 +80,8 @@ function Main (props) {
 export default function ChallengeList (props) {
   const { api } = useSubstrateState();
   const { puzzle_hash } = props;
-  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck} } = useAtoContext()
-  return api.query && puzzle_hash && apollo_client && gql && pubRefresh
+  const {apollo_client, gql, puzzleSets: {updatePubRefresh, tryToPollCheck} } = useAtoContext()
+  return api.query && puzzle_hash && apollo_client && gql
     ? <Main {...props} />
     : null;
 }

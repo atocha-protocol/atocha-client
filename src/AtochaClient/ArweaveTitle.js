@@ -4,9 +4,7 @@ import {Form, Input, Grid, Card, Statistic, TextArea, Label, Button, Table} from
 import config from '../config';
 import axios from "axios";
 import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
-import PuzzleList from "./PuzzleList";
-import {gql} from "@apollo/client";
-import StepCase from "../Step/StepCase";
+import getShortText from "../units/GetShortText";
 
 function Main (props) {
   const { puzzle_hash } = props;
@@ -33,7 +31,7 @@ function Main (props) {
   }, [setPuzzleInfo]);
 
   return (
-      <Link to={`/puzzle_detail/${puzzle_hash}`}>{puzzleInfo?puzzleInfo.puzzle_title:puzzle_hash}</Link>
+      <Link to={`/puzzle_detail/${puzzle_hash}`}>{puzzleInfo?getShortText(puzzleInfo.puzzle_title):getShortText(puzzle_hash)}</Link>
   );
 }
 
