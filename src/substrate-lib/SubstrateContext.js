@@ -118,7 +118,7 @@ const loadAccounts = (state, dispatch) => {
 
 
       Keyring.loadAll({ isDevelopment }, allAccounts)
-      Keyring.setSS58Format(50)
+      Keyring.setSS58Format(42)
 
       dispatch({ type: 'SET_KEYRING', payload: Keyring })
     } catch (e) {
