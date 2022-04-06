@@ -124,7 +124,7 @@ function Main() {
                 <Link className={menuItemCss.itemHome} to="/" onClick={()=>{menuClick("home")}}>Home(v333)</Link>
                 <Link className={menuItemCss.itemRanklist} to="/points_rank_list" onClick={()=>{menuClick("ranklist")}}>Points rank list</Link>
                 <Link className={menuItemCss.itemCreate} to="/create" onClick={()=>{menuClick("create")}}>Create</Link>
-                <Link className={menuItemCss.itemStep} to="/step_case" onClick={()=>{menuClick("step")}}>StepCase [old - tools]</Link>
+                {/*<Link className={menuItemCss.itemStep} to="/step_case" onClick={()=>{menuClick("step")}}>StepCase [old - tools]</Link>*/}
                 <Link className={menuItemCss.itemUser} to="/my_home" onClick={()=>{menuClick("user")}}>My</Link>
               </div>
           </Grid.Row>
