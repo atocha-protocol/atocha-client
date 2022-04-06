@@ -14,17 +14,17 @@ function Main (props) {
   const [currentExchangeRewardEra, setCurrentExchangeRewardEra] = useState(0);
 
   useEffect(() => {
-    // atochaFinace.pointExchangeInfo
-    api.query.atochaFinace.pointExchangeInfo(eraNumber).then(res => {
+    // atochaFinance.pointExchangeInfo
+    api.query.atochaFinance.pointExchangeInfo(eraNumber).then(res => {
       console.log('exchangeInfo = ', res.toHuman());
       setExchangeInfo(res.toHuman());
     });
-    api.query.atochaFinace.currentExchangeRewardEra((era_opt) => {
+    api.query.atochaFinance.currentExchangeRewardEra((era_opt) => {
       if (era_opt.isSome) {
         setCurrentExchangeRewardEra(era_opt.value.toNumber());
       }
     });
-  }, [api.query.atochaModule, api.query.atochaFinace.pointExchangeInfo, eraNumber]);
+  }, [api.query.atochaModule, api.query.atochaFinance.pointExchangeInfo, eraNumber]);
 
   function statusChange (newStatus) {
     if (newStatus.isFinalized) {
@@ -75,7 +75,7 @@ function Main (props) {
               setStatus={setStatus}
               refStatus={statusChange}
               attrs={{
-                palletRpc: 'atochaFinace',
+                palletRpc: 'atochaFinance',
                 callable: 'applyPointReward',
                 inputParams: [],
                 paramFields: []

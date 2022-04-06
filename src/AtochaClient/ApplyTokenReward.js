@@ -19,25 +19,25 @@ function Main (props) {
   const [previousExchangeRewardEra, setPreviousExchangeRewardEra] = useState(0);
 
   useEffect(() => {
-    api.query.atochaFinace.pointExchangeInfo(currentExchangeRewardEra).then(res => {
+    api.query.atochaFinance.pointExchangeInfo(currentExchangeRewardEra).then(res => {
       console.log('exchangeInfo current = ', res.toHuman());
       setExchangeInfo(res.toHuman());
     });
-    api.query.atochaFinace.pointExchangeInfo(previousExchangeRewardEra).then(res => {
+    api.query.atochaFinance.pointExchangeInfo(previousExchangeRewardEra).then(res => {
       console.log('exchangeInfo previous = ', res.toHuman());
       setPreviousExchangeInfo(res.toHuman());
     });
-    api.query.atochaFinace.currentExchangeRewardEra((era_opt) => {
+    api.query.atochaFinance.currentExchangeRewardEra((era_opt) => {
       if (era_opt.isSome) {
         setCurrentExchangeRewardEra(era_opt.value.toNumber());
         setPreviousExchangeRewardEra(era_opt.value.toNumber()-1)
       }
     });
     loadLastUpdateBN();
-  }, [api.query.atochaModule, api.query.atochaFinace.pointExchangeInfo, currentExchangeRewardEra, previousExchangeRewardEra, pubRefresh]);
+  }, [api.query.atochaModule, api.query.atochaFinance.pointExchangeInfo, currentExchangeRewardEra, previousExchangeRewardEra, pubRefresh]);
 
   function loadLastUpdateBN() {
-    api.query.atochaFinace
+    api.query.atochaFinance
       .lastUpdateBlockInfoOfPointExchage(bn =>{
         setLastUpBn(bn.toHuman())
       }) .then(unsub => {
@@ -108,7 +108,7 @@ function Main (props) {
               setStatus={setStatus}
               refStatus={statusChange}
               attrs={{
-                palletRpc: 'atochaFinace',
+                palletRpc: 'atochaFinance',
                 callable: 'applyPointReward',
                 inputParams: [],
                 paramFields: []

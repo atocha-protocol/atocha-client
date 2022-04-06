@@ -66,7 +66,7 @@ function Main (props) {
     setStorageHash(jsonHash);
     console.log('JSON:', jsonStr, jsonStr.length);
     console.log('user Effect.', currentAccount);
-  }, [api.query.atochaFinace, puzzleTitle, puzzleTextContent, puzzleFileContent]);
+  }, [api.query.atochaFinance, puzzleTitle, puzzleTextContent, puzzleFileContent]);
 
   function statusChange (newStatus) {
     console.log(newStatus)
@@ -200,7 +200,7 @@ function Main (props) {
               setStatus={setStatus}
               refStatus={statusChange}
               attrs={{
-                palletRpc: 'atochaFinace',
+                palletRpc: 'atochaFinance',
                 callable: 'preStorage',
                 inputParams: [storageHash, storageLength, maxFee],
                 paramFields: [true, true, true]

@@ -12,7 +12,7 @@ function Main (props) {
   const [currentExchangeRewardEra, setCurrentExchangeRewardEra] = useState(0);
   const { accountPair } = props;
   const [atochaModuleConfig, setAtochaModuleConfig] = useState(null);
-  const [atochaFinaceConfig, setAtochaFinaceConfig] = useState(null);
+  const [atochaFinanceConfig, setatochaFinanceConfig] = useState(null);
 
   async function updateAtochaModuleConfig() {
     api.query.atochaModule.atoConfig().then(puzzleInfoOpt => {
@@ -33,8 +33,8 @@ function Main (props) {
     });
   }
 
-  async function updateAtochaFinaceConfig() {
-    api.query.atochaFinace.atoConfig().then(puzzleInfoOpt => {
+  async function updateatochaFinanceConfig() {
+    api.query.atochaFinance.atoConfig().then(puzzleInfoOpt => {
       // exchangeEraLength: 60
       // exchangeHistoryDepth: 10
       // exchangeMaxRewardListSize: 3
@@ -46,7 +46,7 @@ function Main (props) {
       if (puzzleInfoOpt.isSome) {
         // console.log(puzzleInfoOpt.value.toHuman());
         const config_val = puzzleInfoOpt.value.toHuman();
-        setAtochaFinaceConfig(config_val);
+        setatochaFinanceConfig(config_val);
       }
     });
   }
@@ -55,13 +55,13 @@ function Main (props) {
     const getInfo = async () => {
       if (accountPair) {
         setCurrentAddress(accountPair.address);
-        api.query.atochaFinace.atoPointLedger(accountPair.address).then(chain_point =>{
+        api.query.atochaFinance.atoPointLedger(accountPair.address).then(chain_point =>{
           setPoints(chain_point.toString());
         });
       }
 
       updateAtochaModuleConfig();
-      updateAtochaFinaceConfig();
+      updateatochaFinanceConfig();
 
       try {
         const [
@@ -75,11 +75,11 @@ function Main (props) {
         ] = await Promise.all([
           // api.consts.atochaModule.challengePeriodLength,
           // api.consts.atochaModule.minBonusOfPuzzle,
-          // api.consts.atochaFinace.exchangeMaxRewardListSize,
-          // api.consts.atochaFinace.exchangeEraLength,
-          // api.query.atochaFinace.currentExchangeRewardEra(),
-          api.query.atochaFinace.lastExchangeRewardEra(),
-          // api.consts.atochaFinace.perEraOfBlockNumber
+          // api.consts.atochaFinance.exchangeMaxRewardListSize,
+          // api.consts.atochaFinance.exchangeEraLength,
+          // api.query.atochaFinance.currentExchangeRewardEra(),
+          api.query.atochaFinance.lastExchangeRewardEra(),
+          // api.consts.atochaFinance.perEraOfBlockNumber
         ]);
         setPalletInfo({
           // challengePeriodLength: challengePeriodLength.toString(),
@@ -102,7 +102,7 @@ function Main (props) {
       setBlockNumber(number.toNumber());
     });
 
-    api.query.atochaFinace.currentExchangeRewardEra((era_opt) => {
+    api.query.atochaFinance.currentExchangeRewardEra((era_opt) => {
       console.log(`Chain currentExchangeRewardEra: #${era_opt}`);
       if (era_opt.isSome) {
         setCurrentExchangeRewardEra(era_opt.value.toNumber());
@@ -112,9 +112,9 @@ function Main (props) {
     return () => unsubscribeAll && unsubscribeAll();
   }, [
     api.derive.chain.bestNumber,
-    api.query.atochaFinace.currentExchangeRewardEra,
-    api.query.atochaFinace.atoPointLedger,
-    api.query.atochaFinace.lastExchangeRewardEra,
+    api.query.atochaFinance.currentExchangeRewardEra,
+    api.query.atochaFinance.atoPointLedger,
+    api.query.atochaFinance.lastExchangeRewardEra,
     accountPair]);
 
   return (
@@ -131,21 +131,21 @@ function Main (props) {
         </Card.Content>
         <Card.Content>
           <Card.Description><Icon name='setting' />Point reward settings:</Card.Description>
-          <Card.Description>Point reward era length: {atochaFinaceConfig?atochaFinaceConfig.perEraOfBlockNumber:'*'}b </Card.Description>
+          <Card.Description>Point reward era length: {atochaFinanceConfig?atochaFinanceConfig.perEraOfBlockNumber:'*'}b </Card.Description>
         </Card.Content>
         <Card.Content>
           <Card.Description><Icon name='setting' />Challenge settings:</Card.Description>
           <Card.Description>Challenge period length: {atochaModuleConfig ?atochaModuleConfig.challengePeriodLength:'*'}b (0line 5 Days)</Card.Description>
-          <Card.Description>Raising period length: {atochaFinaceConfig ?atochaFinaceConfig.raisingPeriodLength:'*'}b (0line 3 Days)</Card.Description>
+          <Card.Description>Raising period length: {atochaFinanceConfig ?atochaFinanceConfig.raisingPeriodLength:'*'}b (0line 3 Days)</Card.Description>
 
         </Card.Content>
         <Card.Content>
           <Card.Description><Icon name='setting' />Exchange settings:</Card.Description>
-          <Card.Description>Exchange era length: {atochaFinaceConfig?atochaFinaceConfig.exchangeEraLength:'*'}b (Online 1 Weeks)</Card.Description>
-          <Card.Description>Exchange era calculation: [{atochaFinaceConfig?(blockNumber / atochaFinaceConfig.exchangeEraLength).toFixed(2):'*'}] </Card.Description>
+          <Card.Description>Exchange era length: {atochaFinanceConfig?atochaFinanceConfig.exchangeEraLength:'*'}b (Online 1 Weeks)</Card.Description>
+          <Card.Description>Exchange era calculation: [{atochaFinanceConfig?(blockNumber / atochaFinanceConfig.exchangeEraLength).toFixed(2):'*'}] </Card.Description>
           <Card.Description>Available exchange era: [{currentExchangeRewardEra}]</Card.Description>
           <Card.Description>Last completed exchange era: [{palletInfo.lastExchangeRewardEra}]</Card.Description>
-          <Card.Description>Reward list size: {atochaFinaceConfig?atochaFinaceConfig.exchangeMaxRewardListSize:'*'}</Card.Description>
+          <Card.Description>Reward list size: {atochaFinanceConfig?atochaFinanceConfig.exchangeMaxRewardListSize:'*'}</Card.Description>
         </Card.Content>
       </Card>
     </Grid.Column>
@@ -156,7 +156,7 @@ export default function AtochaPalletInfo (props) {
   const { api } = useSubstrateState();
   return api.query &&
     api.query.atochaModule &&
-    api.query.atochaFinace
+    api.query.atochaFinance
     ? <Main {...props} />
     : null;
 }

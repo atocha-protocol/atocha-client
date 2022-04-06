@@ -76,7 +76,7 @@ const AtoContextProvider = props => {
 
     function loadAccountPoints() {
         currentAccount &&
-        api.query.atochaFinace
+        api.query.atochaFinance
           .atoPointLedger(currentAccount.address, points =>{
               setUserPoints(points.toHuman())
           }) .then(unsub => {

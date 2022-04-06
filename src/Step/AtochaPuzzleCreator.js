@@ -47,7 +47,7 @@ function Main (props) {
       }
     });
 
-    api.query.atochaFinace.puzzleChallengeInfo(puzzleHash).then(challengeInfoOpt => {
+    api.query.atochaFinance.puzzleChallengeInfo(puzzleHash).then(challengeInfoOpt => {
       if (challengeInfoOpt.isSome) {
         console.log('challengeInfoOpt.value.toHuman() 2 = ', challengeInfoOpt.value.toHuman());
         setChallengeInfo(challengeInfoOpt.value.toHuman());
