@@ -73,7 +73,7 @@ function Main (props) {
         <TableBody>
           <TableRow>
             <TableCell>moduleConfig.minBonusOfPuzzle</TableCell>
-            <TableCell>{financeConfig?(parseFloat(hexToBigInt(financeConfig.minBonusOfPuzzle)/BigInt(10**14)).toString())/10000:'*'} ATO</TableCell>
+            <TableCell>{moduleConfig?(parseFloat(hexToBigInt(moduleConfig.minBonusOfPuzzle)/BigInt(10**14)).toString())/10000:'*'} ATO</TableCell>
             <TableCell>Puzzle最小的保证金(ATO)</TableCell>
           </TableRow>
           <TableRow>
@@ -166,7 +166,7 @@ function Main (props) {
           <TableRow>
             <TableCell>financeConfig.issuancePerBlock</TableCell>
             <TableCell>{financeConfig?(parseFloat(hexToBigInt(financeConfig.issuancePerBlock)/BigInt(10**14)).toString())/10000:'*'} ATO</TableCell>
-            <TableCell>每个Block增发的数量大于 1.902 个ATO，这些增发会给到参与答题的用户</TableCell>
+            <TableCell>每个Block增发的数量，这些增发会给到参与答题的用户</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>financeConfig.pointRewardEpochBlockLength</TableCell>
