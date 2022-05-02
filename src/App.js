@@ -33,6 +33,7 @@ import PointsRankList from "./AtochaClient/PointsRankList";
 import UserHome from "./AtochaClient/UserHome";
 import ClientAtochaCreator from "./AtochaClient/ClientAtochaCreator";
 import MyHome from "./AtochaClient/MyHome";
+import ChainStatus from "./AtochaClient/ChainStatus";
 
 function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState()
@@ -124,8 +125,9 @@ function Main() {
                 <Link className={menuItemCss.itemHome} to="/" onClick={()=>{menuClick("home")}}>Home(v333)</Link>
                 <Link className={menuItemCss.itemRanklist} to="/points_rank_list" onClick={()=>{menuClick("ranklist")}}>Points rank list</Link>
                 <Link className={menuItemCss.itemCreate} to="/create" onClick={()=>{menuClick("create")}}>Create</Link>
-                {/*<Link className={menuItemCss.itemStep} to="/step_case" onClick={()=>{menuClick("step")}}>StepCase [old - tools]</Link>*/}
                 <Link className={menuItemCss.itemUser} to="/my_home" onClick={()=>{menuClick("user")}}>My</Link>
+                {/*<Link className={menuItemCss.itemStep} to="/step_case" onClick={()=>{menuClick("step")}}>StepCase [old - tools]</Link>*/}
+                <Link className={menuItemCss.itemUser} to="/chain_status" onClick={()=>{menuClick("chain_status")}}>Chain stauts</Link>
               </div>
           </Grid.Row>
             <Grid.Row>
@@ -137,6 +139,7 @@ function Main() {
                 <Route path="/my_home" element={<MyHome />} />
                 <Route path="/user_home/:account_id" element={<UserHome />} />
                 <Route path="/puzzle_detail/:puzzle_hash" element={<PuzzleDetail />} />
+                <Route path="/chain_status" element={<ChainStatus />} />
               </Routes>
             </Grid.Row>
           </BrowserRouter>
