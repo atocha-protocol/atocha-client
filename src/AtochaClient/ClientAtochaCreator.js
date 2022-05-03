@@ -57,15 +57,16 @@ function Main (props) {
       ]
     };
     const decimals = api.registry.chainDecimals;
-    setMaxFee(BigInt(5000 * (18 ** decimals)));
+    setMaxFee(BigInt(5000 * (10 ** decimals)));
 
     const jsonStr = JSON.stringify(storageJson);
-    const jsonHash = sha256(jsonStr);
+    const jsonHash = sha256(encodeURIComponent(jsonStr));
     setStorageJson(storageJson);
     setStorageLength(jsonStr.length);
     setStorageHash(jsonHash);
-    console.log('JSON:', jsonStr, jsonStr.length);
+    console.log('JSON:', jsonStr, jsonStr.length, jsonHash);
     console.log('user Effect.', currentAccount);
+    console.log('debug=', sha256(encodeURIComponent('加油加油，中文')));
   }, [api.query.atochaFinance, puzzleTitle, puzzleTextContent, puzzleFileContent]);
 
   function statusChange (newStatus) {
