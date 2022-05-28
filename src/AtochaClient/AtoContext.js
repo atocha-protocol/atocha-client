@@ -125,16 +125,19 @@ const AtoContextProvider = props => {
                       notEqualTo: "JudgePassed"
                     }
                   },
+                  
                   {
                     dynChallengeStatus:{
                       equalTo: "JudgeRejected"
                     }
                   },
+                  
                   {
                     dynChallengeStatus:{
                       equalTo: "RaiseFundsBack"
                     }
                   },
+                  
                   {
                     dynPuzzleStatus:{
                       equalTo: "PUZZLE_STATUS_IS_SOLVED"
@@ -145,7 +148,8 @@ const AtoContextProvider = props => {
                     dynChallengeDeadline: {
                       lessThan: "${pubBlockNumber}"
                     }
-                  },
+                  }, 
+                  
                   {
                     dynPuzzleStatus:{
                       equalTo: "PUZZLE_STATUS_IS_SOLVED"

@@ -35,7 +35,6 @@ function Main (props) {
     if(financeConfig == null) {
       const conf1 = await api.query.atochaFinance.atoConfig2()
       setFinanceConfig(conf1.toJSON());
-
     }
     // atochaModule.atoConfig
     if(moduleConfig == null) {
