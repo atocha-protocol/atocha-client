@@ -26,7 +26,7 @@ const AtoContextProvider = props => {
 
     const apollo_client = new ApolloClient({
         uri: config.SUBQUERY_HTTP,
-        cache: new InMemoryCache()
+        cache: new InMemoryCache(),
     });
 
     function updatePubRefresh() {
@@ -207,6 +207,42 @@ const AtoContextProvider = props => {
                 break;
         }
 
+        // const qqq = `query{
+        //             puzzleCreatedEvents(last:1000,orderBy:EVENT_BN_DESC, ${filter_result}){
+        //                 nodes{
+        //                     whoId,
+        //                     puzzleHash,
+        //                     createBn,
+        //                     eventBn,
+        //                     eventHash,
+        //                     dynRaiseDeadline,
+        //                     dynChallengeDeadline,
+        //                     dynPuzzleStatus,
+        //                     dynHaveMatchedAnswer,
+        //                     dynChallengeStatus,
+        //                     dynTotalDeposit,
+        //                     ref_challenge_infos{
+        //                         totalCount
+        //                     },
+        //                     ref_challenge_status(orderBy:EVENT_BN_DESC){
+        //                         totalCount,
+        //                         nodes{
+        //                             challengeStatus
+        //                         }
+        //                     },
+        //                     ref_answer_infos(orderBy:EVENT_BN_DESC){
+        //                         totalCount,
+        //                         nodes{
+        //                             answerContent,
+        //                             eventBn,
+        //                             resultType
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }`
+        // console.log("qqq2 = ", qqq)
+
         apollo_client.query({
             query: gql`
                 query{
@@ -245,6 +281,7 @@ const AtoContextProvider = props => {
                 }
             `
         }).then(result => {
+            console.log("RUN KAMI- ", result.data.puzzleCreatedEvents)
             setPubPuzzleList(result.data.puzzleCreatedEvents.nodes)
         });
     }
