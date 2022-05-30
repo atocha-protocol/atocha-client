@@ -7,6 +7,7 @@ import AnswerList from "./AnswerList";
 import {gql} from "@apollo/client";
 import {useAtoContext} from "./AtoContext";
 import {web3FromSource} from "@polkadot/extension-dapp";
+import KButton from "./KButton";
 
 function Main (props) {
   const { api, currentAccount } = useSubstrateState();
@@ -37,26 +38,18 @@ function Main (props) {
     return fromAcct;
   };
 
-  async function doAnswerPuzzle() {
-    const fromAcct = await getFromAcct();
-    api.tx.atochaModule
-      .answerPuzzle(puzzle_hash, answerTxt, answerExplain)
-      .signAndSend(fromAcct, {}, ({events = [], status}) => {
-        console.log('Transaction status:', status.type);
+  function handlerEvent(section, method, statusCallBack) {
+    // console.log("#########", section, method)
+    if(section == 'atochaModule' &&  method == 'AnswerCreated') {
+      statusCallBack(1)
+      freshList() // update list
+    }else if(section == 'system' &&  method == 'ExtrinsicFailed') {
+      statusCallBack(2)
+    }
+  }
 
-        if (status.isInBlock) {
-          console.log('Included at block hash', status.asInBlock.toHex());
-          console.log('Events:');
-
-          events.forEach(({event: {data, method, section}, phase}) => {
-            console.log('事件 \t', phase.toString(), `: ${section}.${method}`, data.toString());
-            if (`${section}.${method}` == 'system.ExtrinsicFailed') {
-              setStatusTxt(`${section}.${method} = ${data.toString()}`)
-            }
-          });
-        } else if (status.isFinalized) {
-          // setStatusTxt(`${statusTxt}\nFinalized`)
-          const query_str = `
+  async function freshList() {
+    const query_str = `
              query{
               answerCreatedEvents(filter: {
                 puzzleHash:{
@@ -66,10 +59,43 @@ function Main (props) {
                 totalCount
               }
             } `;
-          tryToPollCheck(query_str, updatePubRefresh, ()=>{}, answerList.length);
-        }
-      });
+    tryToPollCheck(query_str, updatePubRefresh, ()=>{}, answerList.length);
   }
+
+  // async function doAnswerPuzzle() {
+  //   const fromAcct = await getFromAcct();
+  //   api.tx.atochaModule
+  //     .answerPuzzle(puzzle_hash, answerTxt, answerExplain)
+  //     .signAndSend(fromAcct, {}, ({events = [], status}) => {
+  //       console.log('Transaction status:', status.type);
+  //
+  //       if (status.isInBlock) {
+  //         console.log('Included at block hash', status.asInBlock.toHex());
+  //         console.log('Events:');
+  //
+  //         events.forEach(({event: {data, method, section}, phase}) => {
+  //           console.log('get events \t', phase.toString(), `: ${section}.${method}`, data.toString());
+  //           // atochaModule.AnswerCreated
+  //           if (`${section}.${method}` == 'system.ExtrinsicFailed') {
+  //             setStatusTxt(`${section}.${method} = ${data.toString()}`)
+  //           }
+  //         });
+  //       } else if (status.isFinalized) {
+  //         // setStatusTxt(`${statusTxt}\nFinalized`)
+  //         const query_str = `
+  //            query{
+  //             answerCreatedEvents(filter: {
+  //               puzzleHash:{
+  //                 equalTo: "${puzzle_hash}"
+  //               }
+  //             }){
+  //               totalCount
+  //             }
+  //           } `;
+  //         tryToPollCheck(query_str, updatePubRefresh, ()=>{}, answerList.length);
+  //       }
+  //     });
+  // }
 
   // function statusChange (newStatus) {
   //   if (newStatus.isFinalized) {
@@ -120,7 +146,18 @@ function Main (props) {
           {/*      paramFields: [true, true, true]*/}
           {/*    }}*/}
           {/*/>*/}
-          <Button onClick={()=>doAnswerPuzzle()}>Submit</Button>
+          {/*<Button onClick={()=>doAnswerPuzzle()}>Submit</Button>*/}
+          <KButton
+            label={`Kami new button with check events. `}
+            type={`SIGNED-TX`}
+            attrs={{
+              palletRpc: 'atochaModule',
+              callable: 'answerPuzzle',
+              inputParams: [puzzle_hash, answerTxt, answerExplain],
+              paramFields: [true, true, true],
+            }}
+            handlerEvent= {handlerEvent}
+          />
         </Form.Field>
         <div style={{ overflowWrap: 'break-word' }}>{statusTxt}</div>
       </Form>
