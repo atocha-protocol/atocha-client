@@ -12,7 +12,7 @@ import KButton from "./KButton";
 function Main (props) {
   const { api, currentAccount } = useSubstrateState();
   const { puzzle_hash, answerList } = props;
-  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck} } = useAtoContext()
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck}, extractErrorMsg} = useAtoContext()
 
   // Puzzle information.
   const [answerTxt, setAnswerTxt] = useState('');
@@ -38,14 +38,30 @@ function Main (props) {
     return fromAcct;
   };
 
-  function handlerEvent(section, method, statusCallBack) {
-    // console.log("#########", section, method)
+  function handlerEvent(section, method, statusCallBack, data) {
     if(section == 'atochaModule' &&  method == 'AnswerCreated') {
-      statusCallBack(1)
+      statusCallBack(1, "[Good]")
       freshList() // update list
     }else if(section == 'system' &&  method == 'ExtrinsicFailed') {
-      statusCallBack(2)
+      // module: {index: 22, error: 0}
+      const failedData = data.toJSON()[0].module
+      const failedMsg = extractErrorMsg(failedData.index, failedData.error)
+      if(failedMsg) {
+        statusCallBack(2, `[${failedMsg}]`)
+      }else{
+        statusCallBack(2, "[Unknown Mistake]")
+      }
     }
+  }
+
+  function preCheckCall(buttonKey, currentStatus, statusCallBack) {
+    console.log("currentStatus = ", currentStatus)
+    if(currentStatus == 3) {
+      alert('Have pending process.')
+      return false
+    }
+    statusCallBack(0, "")
+    return true
   }
 
   async function freshList() {
@@ -155,7 +171,10 @@ function Main (props) {
               callable: 'answerPuzzle',
               inputParams: [puzzle_hash, answerTxt, answerExplain],
               paramFields: [true, true, true],
+
             }}
+            buttonKey={'puzzle_answer_on_click'}
+            preCheckCall= {preCheckCall}
             handlerEvent= {handlerEvent}
           />
         </Form.Field>

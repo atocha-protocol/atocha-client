@@ -9,6 +9,8 @@ import {
 } from "@apollo/client";
 
 import config from "../config";
+import error_info from "../config/error.json";
+
 import {useSubstrateState} from "../substrate-lib";
 
 const AtoContext = createContext(null)
@@ -31,6 +33,16 @@ const AtoContextProvider = props => {
 
     function updatePubRefresh() {
         setPubRefresh(pubRefresh+1)
+    }
+
+    function extractErrorMsg(index, error) {
+        console.log("-----------", index, error)
+        if(error_info[index]){
+            if(error_info[index][error]){
+                return error_info[index][error]
+            }
+        }
+        return null
     }
 
     // successful call, failed call
@@ -295,7 +307,6 @@ const AtoContextProvider = props => {
             }).then(unsub => {
                 unsubscribeAll = unsub
             }).catch(console.error)
-
             loadPuzlleList();
             loadAccountPoints();
         }
@@ -305,7 +316,8 @@ const AtoContextProvider = props => {
         <>
             <AtoContext.Provider value={{ helloWorld, apollo_client, gql,
                 chainData: {pubBlockNumber, userPoints},
-                puzzleSets: {pubPuzzleList, setPubPuzzleList, setPubPuzzleListType, pubRefresh, updatePubRefresh, tryToPollCheck}
+                puzzleSets: {pubPuzzleList, setPubPuzzleList, setPubPuzzleListType, pubRefresh, updatePubRefresh, tryToPollCheck},
+                extractErrorMsg
             }}>
                 {props.children}
             </AtoContext.Provider>

@@ -21,14 +21,16 @@ import {web3FromSource} from "@polkadot/extension-dapp";
 import utils from "../substrate-lib/utils";
 
 function Main (props) {
-  const {label, type, attrs, handlerEvent} = props
+  const {label, type, attrs, handlerEvent, buttonKey, preCheckCall} = props
   const { api, currentAccount } = useSubstrateState();
   const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck} } = useAtoContext()
   // 0 == nothing, 1 = ok , 2= failed, 3=loading
   const [callStatus, setCallStatus] = useState(0)
+  const [callMessage, setCallMessage] = useState("")
 
-  const statusCallBack = (codeNum) => {
+  const statusCallBack = (codeNum, message) => {
     setCallStatus(codeNum)
+    setCallMessage(message)
   }
 
   const getFromAcct = async () => {
@@ -106,7 +108,9 @@ function Main (props) {
   }
 
   async function doClick() {
-    console.log(attrs)
+    if(false == preCheckCall(buttonKey, callStatus, statusCallBack)) {
+      return ;
+    }
     const fromAcct = await getFromAcct();
 
     const {palletRpc, callable, inputParams, paramFields} = attrs
@@ -121,13 +125,11 @@ function Main (props) {
 
     const unsub = await txExecute
       .signAndSend(fromAcct, {}, ({events = [], status}) => {
-        // console.log('Transaction status:', status.type);
         if (status.isInBlock) {
-          // console.log('Included at block hash', status.asInBlock.toHex());
-          // console.log('Events:');
           statusCallBack(3)
           events.forEach(({event: {data, method, section}, phase}) => {
-            handlerEvent(section, method, statusCallBack)
+            console.log("phase === ", phase)
+            handlerEvent(section, method, statusCallBack, data)
           });
         } else if (status.isFinalized) {
           console.log("RUN finalized.")
@@ -135,9 +137,32 @@ function Main (props) {
       })
   }
 
+  function loadSystemEvents() {
+    // Subscribe to system events via storage
+    api.query.system.events((events) => {
+      console.log(`\nReceived ${events.length} events:`);
+
+      // Loop through the Vec<EventRecord>
+      events.forEach((record) => {
+        // Extract the phase, event and the event types
+        const { event, phase } = record;
+        const types = event.typeDef;
+
+        // Show what we are busy with
+        console.log(`\t${event.section}:${event.method}:: (phase=${phase.toString()})`);
+        console.log(`\t\t${event.meta}`);
+
+        // Loop through each of the parameters, displaying the type and data
+        event.data.forEach((data, index) => {
+          console.log(`\t\t\t${types[index].type}: ${data.toString()}`);
+        });
+      });
+    });
+  }
+
     // Puzzle information.
     useEffect(async () => {
-
+      // loadSystemEvents()
     }, [callStatus, setCallStatus]);
 
   return (
@@ -146,6 +171,9 @@ function Main (props) {
         <span>
           {callStatus?callStatus == 1?"Transaction successed":
                       callStatus == 2?"Transaction failed":callStatus == 3?"Submitting":"**":"*"}
+        </span>
+        <span>
+          {callMessage}
         </span>
       </>
   );
