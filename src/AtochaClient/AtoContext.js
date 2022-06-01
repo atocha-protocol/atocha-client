@@ -46,7 +46,7 @@ const AtoContextProvider = props => {
     }
 
     // successful call, failed call
-    function tryToPollCheck(totalListenQueryStr, successfulCall, failedCall, threshold =0, maxRetry=10) {
+    function tryToPollCheck(totalListenQueryStr, successfulCall, failedCall, threshold =0, maxRetry=20) {
 
         let tmpTimer = 0;
         let tmpRetry = maxRetry;

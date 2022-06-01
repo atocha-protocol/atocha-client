@@ -26,7 +26,7 @@ function Main (props) {
     apollo_client.query({
       query: gql`
         query{
-          challengeDepositEvents(last: 1000, filter: {
+          challengeDepositEvents(orderBy:EVENT_BN_DESC, last: 1000, filter: {
             puzzleHash:{
               equalTo: "${puzzle_hash}"
             }

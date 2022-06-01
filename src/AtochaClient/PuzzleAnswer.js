@@ -171,7 +171,7 @@ function Main (props) {
           {/*/>*/}
           {/*<Button onClick={()=>doAnswerPuzzle()}>Submit</Button>*/}
           <KButton
-            label={`Kami new button with check events. `}
+            label={`Submit an answer`}
             type={`SIGNED-TX`}
             attrs={{
               palletRpc: 'atochaModule',
