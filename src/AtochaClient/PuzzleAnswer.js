@@ -44,6 +44,9 @@ function Main (props) {
         ()=>{
           updatePubRefresh()
           statusCallBack(1, "[Good]")
+        },
+        () => {
+          statusCallBack(2, "[Get failed, please try to refresh the page]")
         }
       ) // update list
     }else if(section == 'system' &&  method == 'ExtrinsicFailed') {
@@ -68,7 +71,7 @@ function Main (props) {
     return true
   }
 
-  async function freshList(successCall) {
+  async function freshList(successCall, failedCall) {
     const query_str = `
              query{
               answerCreatedEvents(filter: {
@@ -79,7 +82,7 @@ function Main (props) {
                 totalCount
               }
             } `;
-    tryToPollCheck(query_str, successCall, ()=>{}, answerList.length);
+    tryToPollCheck(query_str, successCall, failedCall, answerList.length);
   }
 
   // async function doAnswerPuzzle() {
