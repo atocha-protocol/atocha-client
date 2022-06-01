@@ -170,7 +170,7 @@ function Main (props) {
         <Button onClick={()=>doClick()}>{label}</Button>
         <span>
           {callStatus?callStatus == 1?"Transaction successed":
-                      callStatus == 2?"Transaction failed":callStatus == 3?"Submitting":"**":"*"}
+            callStatus == 2?"Transaction failed":callStatus == 3? <span>Submitting... <i className="ui active inline loader mini"></i></span>:"**":"*"}
         </span>
         <span>
           {callMessage}

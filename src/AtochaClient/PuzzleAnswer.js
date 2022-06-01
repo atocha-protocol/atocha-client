@@ -40,8 +40,12 @@ function Main (props) {
 
   function handlerEvent(section, method, statusCallBack, data) {
     if(section == 'atochaModule' &&  method == 'AnswerCreated') {
-      statusCallBack(1, "[Good]")
-      freshList() // update list
+      freshList(
+        ()=>{
+          updatePubRefresh()
+          statusCallBack(1, "[Good]")
+        }
+      ) // update list
     }else if(section == 'system' &&  method == 'ExtrinsicFailed') {
       // module: {index: 22, error: 0}
       const failedData = data.toJSON()[0].module
@@ -64,7 +68,7 @@ function Main (props) {
     return true
   }
 
-  async function freshList() {
+  async function freshList(successCall) {
     const query_str = `
              query{
               answerCreatedEvents(filter: {
@@ -75,7 +79,7 @@ function Main (props) {
                 totalCount
               }
             } `;
-    tryToPollCheck(query_str, updatePubRefresh, ()=>{}, answerList.length);
+    tryToPollCheck(query_str, successCall, ()=>{}, answerList.length);
   }
 
   // async function doAnswerPuzzle() {
