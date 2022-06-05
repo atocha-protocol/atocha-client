@@ -128,17 +128,18 @@ function Main (props) {
       return;
     }
     console.log("currentAccount.address = ", currentAccountId);
+    //(first: 0, last: 10000)
     apollo_client.query({
       query: gql`
           query{
               atochaUserStruct(id: "${currentAccountId}"){
                   id,
-                  ref_create_events{
+                  ref_create_events(first: 0, last: 10000){
                       nodes{
                           puzzleHash
                       }
                   },
-                  ref_answer_events{
+                  ref_answer_events(first: 0, last: 10000){
                       nodes{
                           puzzleInfoId,
                           resultType,
@@ -151,13 +152,13 @@ function Main (props) {
                           }
                       }
                   },
-                  ref_challenge_depoist_events{
+                  ref_challenge_depoist_events(first: 0, last: 10000){
                       nodes{
                           puzzleInfoId,
                           depositType
                       }
                   },
-                  ref_deposit_events{
+                  ref_deposit_events(first: 0, last: 10000){
                       nodes{
                           puzzleInfoId,
                           kind
@@ -180,30 +181,7 @@ function Main (props) {
         <div>Points: {userPoints?userPoints:'*'}</div>
       </Grid.Row>
       <Grid.Row>
-        {/*{relationInfos?<div>*/}
-        {/*  <h3>Message</h3>*/}
-        {/*  <Table>*/}
-        {/*    <Table.Body>*/}
-        {/*      <Table.Row>*/}
-        {/*        <Table.Cell>Claim Answer Bonus</Table.Cell>*/}
-        {/*        <Table.Cell>Status</Table.Cell>*/}
-        {/*        <Table.Cell>Operation</Table.Cell>*/}
-        {/*      </Table.Row>*/}
-        {/*      {remainBonusItems(relationInfos.ref_answer_events.nodes).map((data, idx)=><Table.Row key={idx}>*/}
-        {/*        <Table.Cell>*/}
-        {/*          {data?<ArweaveTitle  puzzle_hash={data.puzzleInfoId} /> : '*'}*/}
-        {/*        </Table.Cell>*/}
-        {/*        <Table.Cell>*/}
-        {/*          {data? data.puzzleInfo.dynPuzzleStatus == 'PUZZLE_STATUS_IS_FINAL'?'Taken':'Wait':'*'}*/}
-        {/*        </Table.Cell>*/}
-        {/*        <Table.Cell>*/}
-        {/*          {data? data.puzzleInfo.dynPuzzleStatus == 'PUZZLE_STATUS_IS_FINAL'?'-':*/}
-        {/*            <Button onClick={() => { takeAnswerReward(data.puzzleInfoId) }}>Claim</Button>:'*'}*/}
-        {/*        </Table.Cell>*/}
-        {/*      </Table.Row>)}*/}
-        {/*    </Table.Body>*/}
-        {/*  </Table>*/}
-        {/*</div>:'No data.'}*/}
+
         {relationInfos?<div>
           <h3>My created: </h3>
           <Table>
@@ -227,11 +205,15 @@ function Main (props) {
             <Table.Body>
               <Table.Row>
                 <Table.Cell>Puzzle title</Table.Cell>
+                <Table.Cell>Puzzle hash</Table.Cell>
                 <Table.Cell>Result type</Table.Cell>
               </Table.Row>
               {relationInfos.ref_answer_events.nodes.map((data, idx)=><Table.Row key={idx}>
                 <Table.Cell>
                   {data?<ArweaveTitle  puzzle_hash={data.puzzleInfoId} /> : '*'}
+                </Table.Cell>
+                <Table.Cell>
+                  {data?data.puzzleInfoId : '*'}
                 </Table.Cell>
                 <Table.Cell>
                   {data?data.resultType:'*'}
